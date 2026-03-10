@@ -115,9 +115,18 @@
             "id": "66f00f90-b039-4332-84a1-80cff07d12ce",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "PathDecide",
                     "type": "Button",
                     "id": "16dd3822-0741-47df-88ce-73b6814a191d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveStart",
+                    "type": "Button",
+                    "id": "fa26aea7-ea92-4f12-ac04-ebad388ebcc8",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -128,11 +137,22 @@
                 {
                     "name": "",
                     "id": "8b7f60b7-b94f-45a1-b19b-89bfc3630ad6",
-                    "path": "",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "PathDecide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4471c61f-95d0-451f-8c13-aea207d73f7a",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveStart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

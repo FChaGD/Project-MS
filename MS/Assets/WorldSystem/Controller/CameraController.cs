@@ -1,12 +1,20 @@
+using FieldDefinition;
+using System.Collections;
+using SystemDefinition;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
 
-public class CameraController : MonoBehaviour
+public class CameraController : IManageSetterFunc
 {
     //카메라와 카메라 목표
-    public Camera camera;
+    public Camera selfCamera;
     public Transform cameraTarget;
+
+    //외부 참조 요소
+    private IGridFunc gridManager;
+
 
     //카메라의 위치
     private Transform cameraTransform;
@@ -16,13 +24,15 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float maxZoom = 30.0f;
     [SerializeField]
-    private float minZoom = 5.0f;
+    private float minZoom = 3.0f;
     [SerializeField]
-    private float distance = 10.0f;
+    private float distance = 5.0f;
     [SerializeField]
     private float zoomSpeed = 2.0f;
 
     //카메라 고정 상태
+    private bool isFixedActivating = false;
+    private Coroutine coroutine;
     private bool anchorSet = false;
     [SerializeField]
     private Vector3 freeCameraTransform;
@@ -47,28 +57,23 @@ public class CameraController : MonoBehaviour
 
     void Awake()
     {
+        selfCamera = GetComponent<Camera>();
         cameraTransform = gameObject.GetComponent<Transform>();
         CameraSizeCheck();
         freeCameraTransform = cameraTransform.position;
+    }
+
+    //그리드매니저 받아오기
+    public override void GridSetter(IGridFunc grid)
+    {
+        gridManager = grid;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
-        //gridmanager 불러오기
-        GridManager gridManager = null;
-
-        foreach (var obj in GameObject.FindGameObjectsWithTag("Manager"))
-        {
-            gridManager = obj.GetComponent<GridManager>();
-            if (gridManager != null)
-                break;
-        }
-
-
         //타일 사이즈 가져오기
-
         Vector2[] minmax = gridManager.getMaxMinXY();
         min = minmax[0];
         max = minmax[1];
@@ -104,12 +109,12 @@ public class CameraController : MonoBehaviour
         }
     }
 
-
+    //카메라 줌인아웃 조작
     public void OnCameraZoom(InputAction.CallbackContext context)
     {
         Vector2 scroll = context.ReadValue<Vector2>();
         distance = Mathf.Clamp(distance - scroll.y * zoomSpeed, minZoom, maxZoom);
-        camera.orthographicSize = distance;
+        selfCamera.orthographicSize = distance;
 
         //현재 카메라 높이 너비 구하기
         CameraSizeCheck();
@@ -119,8 +124,8 @@ public class CameraController : MonoBehaviour
     //카메라 폭 넓이 체크
     private void CameraSizeCheck()
     {
-        halfHeight = camera.orthographicSize;
-        halfWidth = halfHeight * camera.aspect;
+        halfHeight = selfCamera.orthographicSize;
+        halfWidth = halfHeight * selfCamera.aspect;
     }
 
     //카메라 고정 확인
@@ -131,10 +136,19 @@ public class CameraController : MonoBehaviour
 
         // 카메라 고정 전환
         anchorSet = !anchorSet;
+
+
         Debug.Log(anchorSet);
+        
+        //카메라 고정이 풀렸다면
         if (!anchorSet)
         {
-            camera.transform.position = freeCameraTransform;
+            if(coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                isFixedActivating = false;
+            }
+            selfCamera.transform.position = freeCameraTransform;
         }
 
     }
@@ -151,18 +165,46 @@ public class CameraController : MonoBehaviour
         dragDirection = context.ReadValue<Vector2>();
     }
 
+    //플레이어 캐릭터에게 카메라 이동
     public void OnFocusCamera(InputAction.CallbackContext context)
     {
-        camera.transform.position = new Vector3(cameraTarget.position.x, cameraTarget.position.y, -10);
-        freeCameraTransform = camera.transform.position;
+        selfCamera.transform.position = new Vector3(cameraTarget.position.x, cameraTarget.position.y, -10);
+        freeCameraTransform = selfCamera.transform.position;
     }
 
     //고정 카메라 이동
     private void CameraFixedMove()
     {
         // 캐릭터 고정 이동
-        Vector3 cameraPosition = new Vector3(cameraTarget.position.x, cameraTarget.position.y, -10);
-        cameraTransform.position = cameraPosition;
+        if (!isFixedActivating)
+        {
+            coroutine = StartCoroutine(LerpMove());
+        }
+
+    }
+
+    private IEnumerator LerpMove()
+    {
+        isFixedActivating = true;
+        float cameraMoveDistance = Vector2.Distance(cameraTransform.position, cameraTarget.position);
+        float duration = cameraMoveDistance / 20;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        { 
+            yield return null;
+            cameraMoveDistance = Vector2.Distance(cameraTransform.position, cameraTarget.position);
+            duration = cameraMoveDistance / 20;
+            elapsed += Time.deltaTime;
+
+            float t = elapsed / duration;
+
+            Vector3 cameraPosition = Vector3.Lerp(cameraTransform.position, new Vector3(cameraTarget.position.x, cameraTarget.position.y, -10), t);
+            cameraTransform.position = cameraPosition;
+
+        }
+        isFixedActivating = false;
     }
 
     //카메라 경계와 마우스 커서 일치 카메라 이동
@@ -209,13 +251,10 @@ public class CameraController : MonoBehaviour
         float ymove = moveDir.y * Time.deltaTime;
 
         CameraPositionCheck(ref xmove, ref ymove,  moveDir * Time.deltaTime, pushSpeed);
-
-        Debug.Log(pushSpeed * Time.deltaTime);
         transform.Translate(new Vector3(xmove, ymove,0)* pushSpeed, Space.World);
 
         ////자유 카메라 위치 저장
         freeCameraTransform = cameraTransform.position;
-        Debug.Log("자유카메라 위치 : " + freeCameraTransform + ", " + cameraTransform.position);
 
     }
 
@@ -225,7 +264,6 @@ public class CameraController : MonoBehaviour
     {
         if (isDragging)
         {
-            Debug.Log("드래그 확인");
 
             float xmove = -dragDirection.x;
             float ymove = -dragDirection.y;
@@ -249,9 +287,6 @@ public class CameraController : MonoBehaviour
         leftright = true;
 
         //좌우 확인
-        float a = cameraTransform.position.x + direction.x * speed;
-        float b = min.x + halfWidth;
-        Debug.Log("드래그 확인 : " + cameraTransform.position.x +  ", " + a + ", " + b);
         if (cameraTransform.position.x + direction.x * speed < min.x + halfWidth && cameraTransform.position.x + direction.x * speed > max.x - halfWidth)
         {
             //좌우 둘다 경계에 닿았을 때
@@ -324,7 +359,6 @@ public class CameraController : MonoBehaviour
         {
             ymove *= 0;
         }
-        Debug.Log("경계 테스트 : " + xmove + ", " + ymove);
 
     }
 }
