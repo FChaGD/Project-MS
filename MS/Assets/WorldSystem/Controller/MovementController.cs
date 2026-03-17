@@ -21,6 +21,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
     private IGridFunc gridManager;
     private IUIFunc uiManager;
     private ISystemFunc systemManager;
+    private ICameraFunc cameraController;
 
     //외부 클래스 이벤트 발생용
     public Action Movement = () => {};
@@ -48,7 +49,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         gridManager = grid;
     }
 
-    //UI매니저 받아오기
+    //매니저, 컨트롤러 받아오기
     public override void UISetter(IUIFunc ui)
     {
         uiManager = ui;
@@ -59,6 +60,12 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         systemManager = system;
     }
 
+    public override void CameraControlSetter(ICameraFunc cameracontrol)
+    {
+        cameraController = cameracontrol;
+    }
+
+    //Movement 이벤트 등록 및 제거
     public void AddMovementEvent(Action action)
     {
         Movement += action;
@@ -69,6 +76,11 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         Movement -= action;
     }
 
+    public void StopMovement()
+    {
+        StopAllCoroutines();
+        isMoving = false;
+    }
 
     private Vector2 GetPlayerPosition()
     {
@@ -213,6 +225,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
             float t = elapsed / duration;
 
             transform.position = Vector2.Lerp(start, target, t);
+            cameraController.CameraUpdate();
 
             //1초마다 이동 이벤트 발생
             if (elapsed >= sec)

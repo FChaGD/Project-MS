@@ -378,7 +378,7 @@ Transform:
   m_GameObject: {fileID: 279536467}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 31, y: 31, z: -2}
+  m_LocalPosition: {x: 201, y: 201, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -398,6 +398,8 @@ GameObject:
   - component: {fileID: 519420030}
   - component: {fileID: 519420034}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420036}
+  - component: {fileID: 519420035}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -535,15 +537,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79ef99fa949f5b46ad0714d06b2d39c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  selfCamera: {fileID: 519420031}
-  cameraTarget: {fileID: 1340064793}
-  maxZoom: 30
-  minZoom: 3
-  distance: 5
-  zoomSpeed: 2
-  freeCameraTransform: {x: 0, y: 0, z: 0}
-  dragSpeed: 0.02
-  pushSpeed: 5
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -653,11 +646,46 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e50317bf-94b6-4c58-8d7b-35653487bb89
     m_ActionName: 'Camera/CameraFocus[/Keyboard/space]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fa26aea7-ea92-4f12-ac04-ebad388ebcc8
+    m_ActionName: 'Play/MoveStart[/Keyboard/m]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: PC
   m_DefaultActionMap: Camera
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 519420031}
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fdfd57c377bf0143820e45fea0f17c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraSettingController
+  maxZoom: 50
+  minZoom: 3
+  distance: 5
+  zoomSpeed: 1
+  dragSpeed: 0.005
+  pushSpeed: 1000
+--- !u!114 &519420036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdf7321a44b3e0246969d6f04db65939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldCameraMovement
+  freeCameraTransform: {x: 0, y: 0, z: 0}
 --- !u!1 &546116755
 GameObject:
   m_ObjectHideFlags: 0
@@ -1006,6 +1034,7 @@ GameObject:
   - component: {fileID: 1340064792}
   - component: {fileID: 1340064795}
   - component: {fileID: 1340064794}
+  - component: {fileID: 1340064796}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1081,7 +1110,7 @@ Transform:
   m_GameObject: {fileID: 1340064791}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 180, y: 180, z: -1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1099,7 +1128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a927d00ee37cf6841b0a5d17a2be2086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 0.125
+  MoveSecound: 8
 --- !u!114 &1340064795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1182,6 +1211,18 @@ MonoBehaviour:
   m_DefaultActionMap: Play
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1340064796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340064791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8f3115c866e694c92ea37b9b194597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PartyManager
 --- !u!1 &1396614874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1250,6 +1291,7 @@ GameObject:
   - component: {fileID: 1850479094}
   - component: {fileID: 1850479093}
   - component: {fileID: 1850479095}
+  - component: {fileID: 1850479096}
   m_Layer: 0
   m_Name: WorldManager
   m_TagString: Manager
@@ -1269,8 +1311,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7b69230ce5d7749857b76aae739963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
-  min: -29
-  max: 30
+  min: -199
+  max: 200
 --- !u!4 &1850479094
 Transform:
   m_ObjectHideFlags: 0
@@ -1298,6 +1340,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd3ddd631055f142b2b5ad11651f174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EncounterManager
+  positiveEncounterP: 1.5
+  negativeEncounterP: 3
+--- !u!114 &1850479096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850479092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35985d5618d1f2246a3d128626963a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeManager
 --- !u!1 &1898082383
 GameObject:
   m_ObjectHideFlags: 0

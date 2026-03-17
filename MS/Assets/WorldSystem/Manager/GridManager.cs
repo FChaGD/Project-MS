@@ -19,9 +19,9 @@ public class GridManager : MonoBehaviour, IGridFunc
     // 좌표 범위
     [Header("Tile Range")]
     [SerializeField]
-    private int min = -29;
+    private int min;
     [SerializeField]
-    private int max = 30;
+    private int max;
     public int Min => min;
     public int Max => max;
 
@@ -161,7 +161,7 @@ public class GridManager : MonoBehaviour, IGridFunc
         }
     }
 
-    //타일 경계 그리기
+    /*//타일 경계 그리기
     private void OnDrawGizmos()
     {
         if (tilemap == null) return;
@@ -178,6 +178,6 @@ public class GridManager : MonoBehaviour, IGridFunc
             Gizmos.DrawWireCube(world, size);
         }
 
-    }
+    }*/
 
 }

@@ -35,6 +35,7 @@ public class ManageManager : MonoBehaviour
 
         //컨트롤러 라인
         SetMovementBinder();
+        SetCameraBinder();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -68,6 +69,11 @@ public class ManageManager : MonoBehaviour
 
     private void SetEncountBinder()
     {
+    }
+
+    private void SetCameraBinder()
+    {
+        movementController.CameraControlSetter(cameraController);
     }
 
     private void SetMovementBinder()

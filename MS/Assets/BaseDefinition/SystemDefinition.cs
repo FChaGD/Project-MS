@@ -11,6 +11,30 @@ namespace SystemDefinition
 
     }
 
+    [System.Serializable]
+    public class CameraSettings
+    {
+        //카메라 줌인아웃 관련
+        public float maxZoom;
+        public float minZoom;
+        public float distance;
+        public float zoomSpeed;
+
+        //카메라 고정 상태
+        public bool anchorSet;
+
+
+        //카메라 자율 이동
+        public float dragSpeed;
+        public float pushSpeed;
+
+        //카메라 월드 경계 정하기
+        public Vector2 max;
+        public Vector2 min;
+        public float cameraHalfHeight;
+        public float cameraHalfWidth;
+    }
+
     //게임 시스템의 상태
     public enum GameModeType
     {
@@ -32,6 +56,11 @@ namespace SystemDefinition
     public interface ISystemFunc
     {
         GameModeType GetGameMode();
+    }
+
+    public interface ICameraFunc
+    {
+        void CameraUpdate();
     }
 
 
@@ -61,5 +90,11 @@ namespace SystemDefinition
         {
             return;
         }
+
+        public virtual void CameraControlSetter(ICameraFunc cameracontrol)
+        {
+            return;
+        }
+
     }
 }

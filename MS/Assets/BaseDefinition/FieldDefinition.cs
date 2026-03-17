@@ -17,16 +17,6 @@ namespace FieldDefinition
         Civil, // 문명화
     }
 
-    // 필드 데이터 집합 클래스
-    public class FieldData
-    {
-        private bool hasRoad;
-        private bool canPass;
-        private TileType tileType;
-        private string[] eventList;
-        private InfluenceData areaData;
-        
-    }
 
     //영향력 관련 정보 클래스
     public class InfluenceData
@@ -76,6 +66,7 @@ namespace FieldDefinition
     {
         void AddMovementEvent(Action action);
         void RemoveMovementEvent(Action action);
+        void StopMovement();
     }
 
 
