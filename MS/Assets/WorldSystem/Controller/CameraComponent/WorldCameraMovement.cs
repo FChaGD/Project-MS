@@ -36,7 +36,6 @@ public class WorldCameraMovement : MonoBehaviour
 
     void Start()
     {
-
         //카메라 타겟 가져오기
         cameraTarget = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
@@ -129,6 +128,13 @@ public class WorldCameraMovement : MonoBehaviour
     private IEnumerator FixedLerpMove()
     {
         isFixedActivating = true;
+        if(cameraTarget == null)
+        {
+            yield return new WaitForFixedUpdate();
+            //카메라 타겟 가져오기
+            cameraTarget = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        }
+
         float cameraMoveDistance = Vector2.Distance(cameraTransform.position, cameraTarget.position);
         float duration = cameraMoveDistance / 20;
 
