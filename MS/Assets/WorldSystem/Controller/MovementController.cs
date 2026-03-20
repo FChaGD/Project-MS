@@ -6,16 +6,18 @@ using SystemDefinition;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+[RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(MovementComponent))]
+[RequireComponent(typeof(TileSelector))]
 public class MovementController : IManageSetterFunc, IMovementFuc
 {
-    private Camera cameraOfPlayer;
 
-    //플레이어 이동 관련
-    public float MoveSecound = 8f;
-    private List<Vector2Int> movePath;
-    private Transform playerTransform;
-    private float moveSpeed = 0.125f;
-    private bool isMoving = false;
+
+    //이동 관련 부가 컴포넌트 변수
+    private MovementComponent movementComponent;
+    private TileSelector tileSelector;
+    private MovementStateSetter movementStateSetter;
 
     //외부 참조 요소
     private IGridFunc gridManager;
@@ -23,24 +25,36 @@ public class MovementController : IManageSetterFunc, IMovementFuc
     private ISystemFunc systemManager;
     private ICameraFunc cameraController;
 
-    //외부 클래스 이벤트 발생용
-    public Action Movement = () => {};
+    //이동 관련 정보 클래스
+    private MovementInfo movementInfo;
 
 
     void Awake()
     {
-        moveSpeed = 1 / MoveSecound;
-        movePath = new List<Vector2Int>();
-        playerTransform = gameObject.GetComponent<Transform>();
+        movementComponent = GetComponent<MovementComponent>();
+        tileSelector = GetComponent<TileSelector>();
+        movementStateSetter = GetComponent<MovementStateSetter>();
 
+        movementInfo = new MovementInfo();
+
+        movementComponent.Init(movementInfo);
+        tileSelector.Init(movementInfo);
+        movementStateSetter.Init(movementInfo);
     }
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        cameraOfPlayer = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-        playerTransform.Translate(gridManager.GetCenter(new Vector2Int(0, 0)));
+        movementComponent.SetPlayertLocation(gridManager.GetCenter(new Vector2Int(0, 0)));
+
+        tileSelector.GetTileVectorAtWorldPosition += GetTileVectorAtWorld;
+        tileSelector.AddSelectedPathTile += AddSelectedPathTile;
+        tileSelector.RemoveSelectedPathRangeTile += RemoveSelectedPathRangeTile;
+
+        movementComponent.CameraUpdate += CameraUpdate;
+        movementComponent.RemoveAtPathFunc += RemoveAtPathFunc;
+        movementComponent.GetCenter += GetCenter;
+
     }
 
     //그리드매니저 받아오기
@@ -68,175 +82,81 @@ public class MovementController : IManageSetterFunc, IMovementFuc
     //Movement 이벤트 등록 및 제거
     public void AddMovementEvent(Action action)
     {
-        Movement += action;
+        movementComponent.Movement += action;
     }
-    
+
     public void RemoveMovementEvent(Action action)
     {
-        Movement -= action;
+        movementComponent.Movement -= action;
     }
 
     public void StopMovement()
     {
-        StopAllCoroutines();
-        isMoving = false;
+        movementComponent.StopMovement();
     }
 
-    private Vector2 GetPlayerPosition()
-    {
-        return transform.position;
-    }
-
-    //셀 클릭했을 때, 경로 추가
+    //셀 클릭 입력 = 경로 추가 및 제거
     public void AddMovePath(InputAction.CallbackContext context)
     {
         //중복실행 방지
         if (!context.performed) return;
 
         //이동중이거나 게임모드가 월드 상태가 아니라면 작동 X
-        if (isMoving || systemManager.GetGameMode() != GameModeType.World)
+        if (movementComponent.isMoving || systemManager.GetGameMode() != GameModeType.World)
         {
             return;
         }
 
-        //마우스 커서 위치 받아오기
-        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
-        Vector3 worldPos = cameraOfPlayer.ScreenToWorldPoint(mouseScreenPos);
-        worldPos.z = 0f;
 
-        Vector2Int targetTile = gridManager.GetTileVectorAtWorldPosition(worldPos);
-        
-        //플레이어가 위치한 곳의 타일을 선택한 경우
-        Vector3 presentPosition = GetPlayerPosition();
-        Vector2Int presentTile = gridManager.GetTileVectorAtWorldPosition(presentPosition);
-        if (presentTile == targetTile)
-        {
-            Debug.Log($"플레이어 캐릭터가 위치한 타일 선택 : {targetTile}");
-            return;
-        }
+        tileSelector.MovePathAddReMoveFunc();
 
-
-        if (movePath.Count == 0)
-        {
-            //리스트가 비어있을 경우
-            AddPathFunc(presentTile, targetTile);
-            return;
-        }
-
-        //선택한 타일이 이미 리스트에 존재하는가?
-        if (movePath.Contains(targetTile))
-        {
-            //타일 제거(중간부터)
-            RemoveMiddlePathFunc(targetTile);
-        }
-        else
-        {
-            AddPathFunc(movePath[movePath.Count - 1], targetTile);
-        }
     }
 
-    //움직임 시작
+    //움직임 시작 입력
     public void MoveStart(InputAction.CallbackContext context)
     {
         //중복실행 방지
         if (!context.performed) return;
 
-        //경로가 비어있다면
-        if (movePath.Count == 0)
-        {
-            return;
-        }
-
-        if (!isMoving)
-        {
-            StartCoroutine(nameof(MoveAlongPath));
-        }
+        movementComponent.MoveStart();
 
     }
 
-    //타일 선택했을 때 경로 추가 함수
-    private void AddPathFunc(Vector2Int presentTile, Vector2Int targetTile)
+    //하위 컴포넌트 이벤트 함수
+    private Vector2Int GetTileVectorAtWorld(Vector3 worldPos)
     {
-        if (Mathf.Abs(presentTile.x - targetTile.x) <= 1 && Mathf.Abs(presentTile.y - targetTile.y) <= 1)
-        {
-            //플레이어가 마지막으로 선택한 경로의 -1 ~ 1 사이의 타일인지
-
-            Debug.Log($"타일 추가 : {presentTile}, {targetTile}");
-            Debug.Log($"타일 추가 : {presentTile.x - targetTile.x}, {presentTile.y - targetTile.y}");
-            movePath.Add(targetTile);
-            uiManager.AddSelectedPathTile(targetTile);
-            Debug.Log($"현재 타일 : {movePath}");
-            return;
-        }
-        else
-        {
-            //리스트가 비어있고 너무 먼 타일을 선택했을 경우
-            return;
-        }
+        return gridManager.GetTileVectorAtWorldPosition(worldPos);
     }
 
-    //중간 경로 없애기
-    private void RemoveMiddlePathFunc(Vector2Int targetTile)
+    private void AddSelectedPathTile(Vector2Int xy)
     {
-        movePath.RemoveRange(movePath.IndexOf(targetTile), movePath.Count - movePath.IndexOf(targetTile));
-        uiManager.RemoveSelectedPathRangeTile(targetTile);
+        uiManager.AddSelectedPathTile(xy);
     }
 
-    //경로의 한 부분만 없애기
-    private void RemoveAtPathFunc(Vector2Int targetTile)
+    private void RemoveSelectedPathRangeTile(Vector2Int xy)
     {
-        movePath.Remove(targetTile);
-        uiManager.RemoveSelectedPathTile(targetTile);
+        uiManager.RemoveSelectedPathRangeTile(xy);
     }
 
-    //경로 이동하기
-    private IEnumerator MoveAlongPath()
+    private void CameraUpdate()
     {
-        isMoving = true;
-        int currentIndex = 0;
-        int count = movePath.Count;
-        while (currentIndex < count)
-        {
-            Debug.Log($"몇번째 이동인가? {currentIndex}");
-            Vector2 target = gridManager.GetCenter(movePath[0]);
-            yield return StartCoroutine(MoveTo(target));
-            RemoveAtPathFunc(movePath[0]);
-            currentIndex++;
-
-        }
-        isMoving = false;
-
+        cameraController.CameraUpdate(); 
     }
-    
-    //현재 위치에서 다음 좌표로 이동
-    private IEnumerator MoveTo(Vector2 target)
+
+    private void RemoveAtPathFunc(Vector2Int xy)
     {
-        Vector2 start = transform.position;
+        uiManager.RemoveSelectedPathTile(xy);
 
-        float distance = Vector2.Distance(start, target);
-        float duration = distance / moveSpeed;
-
-        float elapsed = 0f;
-        int sec = 1;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            transform.position = Vector2.Lerp(start, target, t);
-            cameraController.CameraUpdate();
-
-            //1초마다 이동 이벤트 발생
-            if (elapsed >= sec)
-            {
-                sec++;
-                Movement();
-            }
-
-            yield return null;
-        }
-
-        transform.position = target;
     }
+
+    private Vector2 GetCenter(Vector2Int cellPosition)
+    {
+        return gridManager.GetCenter(cellPosition);
+    }
+
 }
+
+    
+
+   
+   

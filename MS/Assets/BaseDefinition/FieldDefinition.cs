@@ -1,5 +1,6 @@
 using GroupDefinition;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace FieldDefinition
@@ -15,6 +16,14 @@ namespace FieldDefinition
         Swamp, // 늪지
         Desert, // 사막
         Civil, // 문명화
+    }
+
+    [Serializable]
+    public enum MovementType
+    {
+        Walk, //지상 이동
+        Sail, //해상 이동
+        Fly //공중 이동
     }
 
 
@@ -47,12 +56,26 @@ namespace FieldDefinition
         }
     }
 
+    public class MovementInfo
+    {
+
+        //플레이어 이동 경로
+        public List<Vector2Int> movePath;
+
+        //이동 상태
+        public MovementType movementType;
+
+        //플레이어 이동 변수
+        public float MoveSecound = 8f;
+        public float moveSpeed = 0.125f;
+    }
+
     //GridManager가 외부에 제공하는 함수
     public interface IGridFunc
     {
         Vector2Int GetTileVectorAtWorldPosition(Vector3 worldPos);
-        Vector2[] getMaxMinXY();
-        Vector2 getCellsize();
+        Vector2[] GetMaxMinXY();
+        Vector2 GetCellsize();
         Vector3 GetCenter(Vector2Int cellPosition);
 
     }

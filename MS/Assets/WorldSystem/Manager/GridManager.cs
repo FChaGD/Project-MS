@@ -101,7 +101,7 @@ public class GridManager : MonoBehaviour, IGridFunc
     }
 
     //좌하단 우상단 끝좌표 보내기
-    public Vector2[] getMaxMinXY()
+    public Vector2[] GetMaxMinXY()
     {
         SetCellSize();
         maxXY = new Vector2(cellWidth * max + cellWidth, cellHeight * max + cellHeight);
@@ -126,7 +126,7 @@ public class GridManager : MonoBehaviour, IGridFunc
     }
 
     //셀 사이즈 보내기
-    public Vector2 getCellsize()
+    public Vector2 GetCellsize()
     {
         SetCellSize();
         return new Vector2(cellWidth, cellHeight);
