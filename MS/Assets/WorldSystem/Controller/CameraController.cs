@@ -29,7 +29,6 @@ public class CameraController : IManageSetterFunc, ICameraFunc
         worldCameraMovement.Init(cameraSettings);
         cameraSettingController.Init(cameraSettings);
 
-        cameraSettingController.CameraSizeCheck();
     }
 
     //그리드매니저 받아오기
@@ -42,8 +41,10 @@ public class CameraController : IManageSetterFunc, ICameraFunc
     void Start()
     {
 
+        cameraSettingController.CameraSizeCheck();
+
         //타일 사이즈 가져오기
-        Vector2[] minmax = gridManager.getMaxMinXY();
+        Vector2[] minmax = gridManager.GetMaxMinXY();
         cameraSettingController.MinMaxSet(minmax);
         worldCameraMovement.CameraFixedMove();
 

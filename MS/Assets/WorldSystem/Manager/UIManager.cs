@@ -75,6 +75,7 @@ public class UIManager : MonoBehaviour, IUIFunc
         selectedPath.RemoveRange(selectedPath.IndexOf(xy), selectedPath.Count - selectedPath.IndexOf(xy));
     }
     
+    //특정 위치 제거
     public void RemoveSelectedPathTile(Vector2Int xy)
     {
         int i = selectedPath.IndexOf(xy);
