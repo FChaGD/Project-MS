@@ -100,15 +100,18 @@ public class GridManager : MonoBehaviour, IGridFunc
         spriteTable.Add(TileType.Mountain, tmp);
     }
 
-    //좌하단 우상단 끝좌표 보내기
+    //좌하단 우상단 끝좌표, 기타 정보 보내기
+    [Tooltip("Return 배열 순서는 좌하단, 우상단 좌표, 셀좌우 개수, 셀크기 순서")]
     public Vector2[] GetMaxMinXY()
     {
         SetCellSize();
         maxXY = new Vector2(cellWidth * max + cellWidth, cellHeight * max + cellHeight);
         minXY = new Vector2(cellWidth * min, cellHeight * min);
-        Vector2[] tmp = new Vector2[2];
+        Vector2[] tmp = new Vector2[4];
         tmp[0] = minXY;
         tmp[1] = maxXY;
+        tmp[2] = new Vector2Int(min, max);
+        tmp[3] = new Vector2(cellWidth, cellHeight);
 
         Debug.Log(minXY + ", " + maxXY);
 

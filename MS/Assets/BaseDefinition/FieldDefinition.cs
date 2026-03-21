@@ -1,6 +1,7 @@
 using GroupDefinition;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace FieldDefinition
@@ -56,6 +57,8 @@ namespace FieldDefinition
         }
     }
 
+    //플레이어 이동 관련 정보 클래스
+    [Serializable]
     public class MovementInfo
     {
 
@@ -68,6 +71,20 @@ namespace FieldDefinition
         //플레이어 이동 변수
         public float MoveSecound = 8f;
         public float moveSpeed = 0.125f;
+    }
+
+    //A* 알고리즘에서 사용할 노드 클래스
+    [Serializable]
+    public class PathFinderNode
+    {
+        public PathFinderNode(bool _canPass, int _x, int _y) { canPass = _canPass; x = _x; y = _y; }
+
+        public bool canPass;
+        public PathFinderNode ParentNode;
+
+        // G : 시작으로부터 이동했던 거리, H : |가로|+|세로| 장애물 무시하여 목표까지의 거리, F : G + H
+        public int x, y, G, H;
+        public int F { get { return G + H; } }
     }
 
     //GridManager가 외부에 제공하는 함수

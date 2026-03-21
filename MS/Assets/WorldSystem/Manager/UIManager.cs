@@ -1,4 +1,5 @@
 using FieldDefinition;
+using NUnit.Framework;
 using System.Collections.Generic;
 using SystemDefinition;
 using UnityEngine;
@@ -13,12 +14,12 @@ public class UIManager : MonoBehaviour, IUIFunc
     //타일맵 UI
     private Dictionary<UIType, Tile> spriteTable;
     private Tilemap tilemap;
-    private List<Vector2Int> selectedPath;
+    private List<Vector2Int> movePath;
 
     void Awake()
     {
         spriteTable = new Dictionary<UIType, Tile>();
-        selectedPath = new List<Vector2Int>();
+        movePath = new List<Vector2Int>();
     }
     
     //그리드매니저 불러오기
@@ -39,7 +40,6 @@ public class UIManager : MonoBehaviour, IUIFunc
                 break;
             }
         }
-        Debug.Log($"UI 매니저 : {(tilemap == null ? "화면이 고정되었습니다." : "화면이 고정되지 않았습니다.")}");
         SetSpriteTable();
 
         //타일 UI 초기화
@@ -47,16 +47,10 @@ public class UIManager : MonoBehaviour, IUIFunc
         tilemap.ClearAllTiles();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     //길 추가
     public void AddSelectedPathTile(Vector2Int xy)
     {
-        selectedPath.Add(xy);
+        movePath.Add(xy);
         Vector3Int tmp = new Vector3Int(xy.x, xy.y, -1);
         tilemap.SetTile(tmp, spriteTable[UIType.Path]);
 
@@ -66,22 +60,25 @@ public class UIManager : MonoBehaviour, IUIFunc
     public void RemoveSelectedPathRangeTile(Vector2Int xy)
     {
         Vector3Int tmp;
-        for(int i = selectedPath.IndexOf(xy); i < selectedPath.Count; i++)
+        for(int i = movePath.IndexOf(xy); i < movePath.Count; i++)
         {
-            tmp = new Vector3Int(selectedPath[i].x, selectedPath[i].y, -1);
+            tmp = new Vector3Int(movePath[i].x, movePath[i].y, -1);
             tilemap.SetTile(tmp, spriteTable[UIType.None]);
         }
 
-        selectedPath.RemoveRange(selectedPath.IndexOf(xy), selectedPath.Count - selectedPath.IndexOf(xy));
+        movePath.RemoveRange(movePath.IndexOf(xy), movePath.Count - movePath.IndexOf(xy));
     }
     
     //특정 위치 제거
     public void RemoveSelectedPathTile(Vector2Int xy)
     {
-        int i = selectedPath.IndexOf(xy);
-        Vector3Int tmp = new Vector3Int(selectedPath[i].x, selectedPath[i].y, -1);
-        tilemap.SetTile(tmp, spriteTable[UIType.None]);
-        selectedPath.Remove(xy);
+        int i = movePath.IndexOf(xy);
+        Vector3Int tmp = new Vector3Int(movePath[i].x, movePath[i].y, -1);
+        if(movePath.IndexOf(xy) == movePath.LastIndexOf(xy))
+        {
+            tilemap.SetTile(tmp, spriteTable[UIType.None]);
+        }
+        movePath.Remove(xy);
     }
 
     //나중에 수정할 펑션
@@ -93,4 +90,5 @@ public class UIManager : MonoBehaviour, IUIFunc
         tmp = Resources.Load<Tile>("Tiles/UITile/Selected");
         spriteTable.Add(UIType.Path, tmp);
     }
+
 }

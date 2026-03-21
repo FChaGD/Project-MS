@@ -1034,7 +1034,10 @@ GameObject:
   - component: {fileID: 1340064792}
   - component: {fileID: 1340064795}
   - component: {fileID: 1340064794}
+  - component: {fileID: 1340064799}
+  - component: {fileID: 1340064798}
   - component: {fileID: 1340064796}
+  - component: {fileID: 1340064797}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1110,7 +1113,7 @@ Transform:
   m_GameObject: {fileID: 1340064791}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 180, y: 180, z: -1}
+  m_LocalPosition: {x: 190, y: 190, z: -1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1128,7 +1131,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a927d00ee37cf6841b0a5d17a2be2086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  MoveSecound: 8
+  movementInfo:
+    movePath: []
+    movementType: 0
+    MoveSecound: 8
+    moveSpeed: 0.125
 --- !u!114 &1340064795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1223,6 +1230,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef8f3115c866e694c92ea37b9b194597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyManager
+--- !u!114 &1340064797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340064791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a20c025488206b4f8859c0044f7b6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementStateSetter
+  MoveSecound: 8
+--- !u!114 &1340064798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340064791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8817f976cf0781146b140bb982104114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TileSelector
+  allowDiagonal: 1
+  dontCrossCorner: 1
+--- !u!114 &1340064799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340064791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5aac13fa179ec4296a6618ad02360c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementConponent
+  isMoving: 0
 --- !u!1 &1396614874
 GameObject:
   m_ObjectHideFlags: 0
