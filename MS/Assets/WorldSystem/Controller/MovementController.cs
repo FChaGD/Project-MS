@@ -26,6 +26,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
     private ICameraFunc cameraController;
 
     //이동 관련 정보 클래스
+    [SerializeField]
     private MovementInfo movementInfo;
 
 
@@ -43,13 +44,18 @@ public class MovementController : IManageSetterFunc, IMovementFuc
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    IEnumerator Start()
     {
+
+        yield return new WaitForSeconds(0.2f);
+
         movementComponent.SetPlayertLocation(gridManager.GetCenter(new Vector2Int(0, 0)));
+
 
         tileSelector.GetTileVectorAtWorldPosition += GetTileVectorAtWorld;
         tileSelector.AddSelectedPathTile += AddSelectedPathTile;
         tileSelector.RemoveSelectedPathRangeTile += RemoveSelectedPathRangeTile;
+        tileSelector.SetMinMax(gridManager.GetMaxMinXY());
 
         movementComponent.CameraUpdate += CameraUpdate;
         movementComponent.RemoveAtPathFunc += RemoveAtPathFunc;
@@ -106,6 +112,8 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         {
             return;
         }
+
+        
 
 
         tileSelector.MovePathAddReMoveFunc();

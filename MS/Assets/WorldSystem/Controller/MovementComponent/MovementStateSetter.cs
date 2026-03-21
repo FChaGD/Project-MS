@@ -10,7 +10,6 @@ public class MovementStateSetter : MonoBehaviour
     private float moveSpeed = 0.125f;
 
     //이동 관련 정보 클래스
-    [SerializeField]
     private MovementInfo _movementInfo;
 
     private void Awake()
