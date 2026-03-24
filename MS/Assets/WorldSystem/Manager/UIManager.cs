@@ -1,11 +1,6 @@
 using FieldDefinition;
-using NUnit.Framework;
-using System.Collections.Generic;
 using SystemDefinition;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
-using UnityEngine.Tilemaps;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class UIManager : MonoBehaviour, IUIFunc
 {
@@ -29,7 +24,7 @@ public class UIManager : MonoBehaviour, IUIFunc
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     //±æ Ãß°¡
