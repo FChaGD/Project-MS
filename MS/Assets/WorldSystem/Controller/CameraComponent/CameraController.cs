@@ -3,7 +3,6 @@ using SystemDefinition;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(WorldCameraMovement))]
 [RequireComponent(typeof(CameraSettingController))]
 public class CameraController : IManageSetterFunc, ICameraFunc
