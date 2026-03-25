@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour, IUIFunc
     void Awake()
     {
         fieldInfoSetter = GetComponent<FieldInfoSetter>();
+        worldUISetter = GetComponent<WorldUISetter>();
     }
     
     //그리드매니저 불러오기
