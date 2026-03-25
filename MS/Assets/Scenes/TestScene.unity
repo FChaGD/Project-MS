@@ -1428,7 +1428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2076744577785631669, guid: 9327bd0eadc4584469874eb7fa8668a8, type: 3}
       propertyPath: m_Padding.m_Left
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2076744577785631669, guid: 9327bd0eadc4584469874eb7fa8668a8, type: 3}
       propertyPath: m_ChildControlHeight
@@ -1690,6 +1690,7 @@ GameObject:
   - component: {fileID: 922401856}
   - component: {fileID: 922401858}
   - component: {fileID: 922401857}
+  - component: {fileID: 922401859}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -1736,6 +1737,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6790488fc2d222e49b99c058a02fe396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
+--- !u!114 &922401859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922401855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2f32b5f75fdf1140bd6bbd7d006b179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUISetter
+  worldUIPanel: {fileID: 554422133}
+  partyInfoPanel: {fileID: 1182992612}
+  pathCheckUI: {fileID: 1597505454}
 --- !u!1 &970346408
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,6 +1763,7 @@ GameObject:
   - component: {fileID: 970346409}
   - component: {fileID: 970346411}
   - component: {fileID: 970346410}
+  - component: {fileID: 970346412}
   m_Layer: 5
   m_Name: PathCheckButtonImage
   m_TagString: Untagged
@@ -1812,6 +1829,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 970346408}
   m_CullTransparentMesh: 1
+--- !u!95 &970346412
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970346408}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b2e37c5682b43b4b848081520f4f06f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1094997656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2409,6 +2448,7 @@ GameObject:
   - component: {fileID: 1597505455}
   - component: {fileID: 1597505457}
   - component: {fileID: 1597505456}
+  - component: {fileID: 1597505458}
   m_Layer: 5
   m_Name: PathCheckUI
   m_TagString: Untagged
@@ -2423,14 +2463,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1597505454}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 970346409}
   m_Father: {fileID: 554422134}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: -0.5, y: 0.5}
   m_AnchorMax: {x: -0.5, y: 0.5}
   m_AnchoredPosition: {x: 950, y: -150}
@@ -2449,7 +2489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.078431375}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2474,6 +2514,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1597505454}
   m_CullTransparentMesh: 1
+--- !u!95 &1597505458
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597505454}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a7125f158df2c624bbbbcd09baf4870e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1850479092
 GameObject:
   m_ObjectHideFlags: 0
@@ -2562,7 +2624,7 @@ GameObject:
   - component: {fileID: 1897688877}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
