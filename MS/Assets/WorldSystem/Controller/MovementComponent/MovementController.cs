@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-[RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(MovementComponent))]
 [RequireComponent(typeof(TileSelector))]
 public class MovementController : IManageSetterFunc, IMovementFuc

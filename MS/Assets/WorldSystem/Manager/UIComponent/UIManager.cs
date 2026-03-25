@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour, IUIFunc
         gridManager = grid;
     }
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
