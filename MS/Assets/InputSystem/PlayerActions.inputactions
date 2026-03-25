@@ -111,7 +111,7 @@
             ]
         },
         {
-            "name": "Play",
+            "name": "World",
             "id": "66f00f90-b039-4332-84a1-80cff07d12ce",
             "actions": [
                 {
@@ -127,6 +127,15 @@
                     "name": "MoveStart",
                     "type": "Button",
                     "id": "fa26aea7-ea92-4f12-ac04-ebad388ebcc8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PathCheckUI",
+                    "type": "Button",
+                    "id": "04643c96-b1db-459b-aba9-a58531fce58d",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -153,6 +162,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MoveStart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e8a370c-60ae-4495-98a8-c5a373094e11",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PathCheckUI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

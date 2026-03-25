@@ -1,16 +1,13 @@
 using FieldDefinition;
-using NUnit.Framework;
-using System.Collections.Generic;
 using SystemDefinition;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
-using UnityEngine.Tilemaps;
-using static Unity.Burst.Intrinsics.X86.Avx;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour, IUIFunc
 {
     //내부 UI 컴포넌트 변수
     private FieldInfoSetter fieldInfoSetter;
+    private WorldUISetter worldUISetter;
 
     //외부 컨트롤러 매니저 변수
     private IGridFunc gridManager;
@@ -29,7 +26,7 @@ public class UIManager : MonoBehaviour, IUIFunc
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     //길 추가
@@ -50,6 +47,19 @@ public class UIManager : MonoBehaviour, IUIFunc
     {
         fieldInfoSetter.RemoveSelectedPathTile(xy);
     }
+
+    //경로 분석 UI toggle 입력
+    public void PathCheckUIToggle(InputAction.CallbackContext context)
+    {
+
+        //중복실행 방지
+        if (!context.performed) return;
+
+        worldUISetter.PathCheckUIToggle();
+
+
+    }
+
 
 
 }
