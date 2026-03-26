@@ -10,7 +10,14 @@ public class FieldInfoSetter : MonoBehaviour
     //타일맵 UI
     private Dictionary<UIType, Tile> spriteTable;
     private Tilemap uiTilemap;
+    [SerializeField]
     private List<Vector2Int> movePath;
+
+    //타일맵 레이어 조정
+    [Header("타일맵 레이어 Z 값")]
+    [SerializeField]
+    [Range(-10, 0)]
+    private int zValue = -1;
 
     private void Awake()
     {
@@ -33,7 +40,7 @@ public class FieldInfoSetter : MonoBehaviour
         SetSpriteTable();
 
         //타일 UI 초기화
-        uiTilemap.GetComponent<Transform>().Translate(new Vector3(0, 0, -5));
+        uiTilemap.GetComponent<Transform>().Translate(new Vector3(0, 0, zValue));
         uiTilemap.ClearAllTiles();
     }
 
@@ -41,7 +48,7 @@ public class FieldInfoSetter : MonoBehaviour
     public void AddSelectedPathTile(Vector2Int xy)
     {
         movePath.Add(xy);
-        Vector3Int tmp = new Vector3Int(xy.x, xy.y, -1);
+        Vector3Int tmp = new Vector3Int(xy.x, xy.y, zValue);
         uiTilemap.SetTile(tmp, spriteTable[UIType.Path]);
 
     }
@@ -50,10 +57,17 @@ public class FieldInfoSetter : MonoBehaviour
     public void RemoveSelectedPathRangeTile(Vector2Int xy)
     {
         Vector3Int tmp;
-        for (int i = movePath.IndexOf(xy); i < movePath.Count; i++)
+        int maxIndex = movePath.Count;
+        for (int i = movePath.IndexOf(xy); i < maxIndex; i++)
         {
-            tmp = new Vector3Int(movePath[i].x, movePath[i].y, -1);
-            uiTilemap.SetTile(tmp, spriteTable[UIType.None]);
+
+            //앞선 경로에 지우려는 경로와 동일한 좌표가 있을 경우 패스
+            //지우려는 경로 이후로 있는 모든 경로는 지우기
+            if (movePath.IndexOf(movePath[i]) >= movePath.IndexOf(xy))
+            {
+                tmp = new Vector3Int(movePath[i].x, movePath[i].y, zValue);
+                uiTilemap.SetTile(tmp, spriteTable[UIType.None]);
+            }
         }
 
         movePath.RemoveRange(movePath.IndexOf(xy), movePath.Count - movePath.IndexOf(xy));
@@ -63,7 +77,7 @@ public class FieldInfoSetter : MonoBehaviour
     public void RemoveSelectedPathTile(Vector2Int xy)
     {
         int i = movePath.IndexOf(xy);
-        Vector3Int tmp = new Vector3Int(movePath[i].x, movePath[i].y, -1);
+        Vector3Int tmp = new Vector3Int(movePath[i].x, movePath[i].y, zValue);
         if (movePath.IndexOf(xy) == movePath.LastIndexOf(xy))
         {
             uiTilemap.SetTile(tmp, spriteTable[UIType.None]);
