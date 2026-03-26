@@ -68,6 +68,12 @@ namespace FieldDefinition
         //이동 상태
         public MovementType movementType;
 
+        //이동 대상 Transform
+        public Transform targetTransform;
+
+        //이동 대상의 레이어 깊이 정보
+        public int layer;
+
         //플레이어 이동 변수
         public float MoveSecound = 8f;
         public float moveSpeed = 0.125f;

@@ -17,17 +17,11 @@ public class MovementComponent : MonoBehaviour
     public Action Movement = () => { };
 
     //플레이어 이동 관련 변수
-    private Transform playerTransform;
     public bool isMoving = false;
 
     //이동 관련 정보 클래스
     private MovementInfo _movementInfo;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        playerTransform = gameObject.GetComponent<Transform>();
-    }
 
     public void Init(MovementInfo movementInfo)
     {
@@ -37,7 +31,7 @@ public class MovementComponent : MonoBehaviour
     public void SetPlayertLocation(Vector3 vector)
     {
 
-        playerTransform.Translate(vector);
+        _movementInfo.targetTransform.Translate(vector);
     }
 
     //이동 중지
@@ -87,11 +81,12 @@ public class MovementComponent : MonoBehaviour
     //현재 위치에서 다음 좌표로 이동
     private IEnumerator MoveTo(Vector2 target)
     {
-        Debug.Log($"이동 타겟 : {target}");
+        Vector3 target3v = new Vector3(target.x, target.y, _movementInfo.layer);
+        Debug.Log($"이동 타겟 : {target3v}");
 
-        Vector2 start = transform.position;
+        Vector3 start = _movementInfo.targetTransform.position;
 
-        float distance = Vector2.Distance(start, target);
+        float distance = Vector3.Distance(start, target);
         float duration = distance / _movementInfo.moveSpeed;
 
         float elapsed = 0f;
@@ -102,7 +97,7 @@ public class MovementComponent : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
 
-            transform.position = Vector2.Lerp(start, target, t);
+            _movementInfo.targetTransform.position = Vector3.Lerp(start, target3v, t);
             CameraUpdate();
 
             //1초마다 이동 이벤트 발생
@@ -114,7 +109,7 @@ public class MovementComponent : MonoBehaviour
 
             yield return null;
         }
-        transform.position = target;
+        _movementInfo.targetTransform.position = target3v;
     }
 
 
