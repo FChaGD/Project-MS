@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(MovementComponent))]
 [RequireComponent(typeof(TileSelector))]
+[RequireComponent(typeof(MovementStateSetter))]
 public class MovementController : IManageSetterFunc, IMovementFuc
 {
 
@@ -28,6 +29,13 @@ public class MovementController : IManageSetterFunc, IMovementFuc
     [SerializeField]
     private MovementInfo movementInfo;
 
+    [Header("컨트롤 대상 정보")]
+    [SerializeField]
+    private Transform targetTransform;
+    [SerializeField]
+    [Range(-10, 0)]
+    private int layer = -1;
+
 
     void Awake()
     {
@@ -36,6 +44,8 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         movementStateSetter = GetComponent<MovementStateSetter>();
 
         movementInfo = new MovementInfo();
+        movementInfo.targetTransform = targetTransform;
+        movementInfo.layer = layer;
 
         movementComponent.Init(movementInfo);
         tileSelector.Init(movementInfo);
@@ -48,6 +58,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
 
         yield return new WaitForSeconds(0.2f);
 
+#warning [플레이어 배치] 초기 플레이어 위치 설정, 추후 변경 필요
         movementComponent.SetPlayertLocation(gridManager.GetCenter(new Vector2Int(0, 0)));
 
 
@@ -60,6 +71,18 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         movementComponent.RemoveAtPathFunc += RemoveAtPathFunc;
         movementComponent.GetCenter += GetCenter;
 
+    }
+
+    void OnDestroy()
+    {
+        //이벤트 제거
+        tileSelector.GetTileVectorAtWorldPosition -= GetTileVectorAtWorld;
+        tileSelector.AddSelectedPathTile -= AddSelectedPathTile;
+        tileSelector.RemoveSelectedPathRangeTile -= RemoveSelectedPathRangeTile;
+        
+        movementComponent.CameraUpdate -= CameraUpdate;
+        movementComponent.RemoveAtPathFunc -= RemoveAtPathFunc;
+        movementComponent.GetCenter -= GetCenter;
     }
 
     //그리드매니저 받아오기

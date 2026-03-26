@@ -789,7 +789,7 @@ MonoBehaviour:
       PathDecide:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 1340064794}
+          - m_Target: {fileID: 1755145360}
             m_TargetAssemblyTypeName: MovementController, Assembly-CSharp
             m_MethodName: AddMovePath
             m_Mode: 0
@@ -804,7 +804,7 @@ MonoBehaviour:
       MoveStart:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 1340064794}
+          - m_Target: {fileID: 1755145360}
             m_TargetAssemblyTypeName: MovementController, Assembly-CSharp
             m_MethodName: MoveStart
             m_Mode: 0
@@ -1774,6 +1774,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b5ac9a67f02cf4296664cc0a89fce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FieldInfoSetter
+  movePath: []
+  zValue: -1
 --- !u!114 &922401858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1935,7 +1937,7 @@ MonoBehaviour:
   systemManager: {fileID: 1396614875}
   encounterManager: {fileID: 1850479095}
   cameraController: {fileID: 519420033}
-  movementController: {fileID: 1340064794}
+  movementController: {fileID: 1755145360}
 --- !u!4 &1094997658
 Transform:
   m_ObjectHideFlags: 0
@@ -2204,10 +2206,6 @@ GameObject:
   - component: {fileID: 1340064793}
   - component: {fileID: 1340064792}
   - component: {fileID: 1340064794}
-  - component: {fileID: 1340064799}
-  - component: {fileID: 1340064798}
-  - component: {fileID: 1340064796}
-  - component: {fileID: 1340064797}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2283,10 +2281,11 @@ Transform:
   m_GameObject: {fileID: 1340064791}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 190, y: 190, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1755145356}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1340064794
@@ -2298,66 +2297,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1340064791}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a927d00ee37cf6841b0a5d17a2be2086, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  movementInfo:
-    movePath: []
-    movementType: 0
-    MoveSecound: 8
-    moveSpeed: 0.125
---- !u!114 &1340064796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340064791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef8f3115c866e694c92ea37b9b194597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyManager
---- !u!114 &1340064797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340064791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a20c025488206b4f8859c0044f7b6e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovementStateSetter
-  MoveSecound: 8
---- !u!114 &1340064798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340064791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8817f976cf0781146b140bb982104114, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TileSelector
-  allowDiagonal: 1
-  dontCrossCorner: 1
---- !u!114 &1340064799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340064791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a5aac13fa179ec4296a6618ad02360c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovementConponent
-  isMoving: 0
 --- !u!1 &1396614874
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,6 +2445,102 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1755145355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1755145356}
+  - component: {fileID: 1755145360}
+  - component: {fileID: 1755145362}
+  - component: {fileID: 1755145361}
+  - component: {fileID: 1755145357}
+  m_Layer: 0
+  m_Name: MovementController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1755145356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755145355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1340064793}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1755145357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755145355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a20c025488206b4f8859c0044f7b6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementStateSetter
+  MoveSecound: 8
+--- !u!114 &1755145360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755145355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a927d00ee37cf6841b0a5d17a2be2086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  movementInfo:
+    movePath: []
+    movementType: 0
+    targetTransform: {fileID: 0}
+    layer: 0
+    MoveSecound: 8
+    moveSpeed: 0.125
+  targetTransform: {fileID: 1340064793}
+  layer: -1
+--- !u!114 &1755145361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755145355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8817f976cf0781146b140bb982104114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TileSelector
+  allowDiagonal: 1
+  dontCrossCorner: 1
+--- !u!114 &1755145362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755145355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5aac13fa179ec4296a6618ad02360c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementComponent
+  isMoving: 0
 --- !u!1 &1850479092
 GameObject:
   m_ObjectHideFlags: 0

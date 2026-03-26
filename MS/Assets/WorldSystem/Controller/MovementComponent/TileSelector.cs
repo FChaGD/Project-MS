@@ -55,8 +55,6 @@ public class TileSelector : MonoBehaviour
         max = minmax[1];
         cellcount = new Vector2Int((int)minmax[2].x, (int)minmax[2].y);
         cellsize = minmax[3];
-
-
     }
 
     void Start()
