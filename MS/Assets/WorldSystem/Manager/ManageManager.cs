@@ -12,11 +12,11 @@ public class ManageManager : MonoBehaviour
     [SerializeField]
     private DataManager dataManager;
     [SerializeField]
-    private UIManager uiManager;
-    [SerializeField]
     private SystemManager systemManager;
     [SerializeField]
     private EncounterManager encounterManager;
+    [SerializeField]
+    private PartyManager partyManager;
 
     //컨트롤러 라인
     [Header("컨트롤 라인")]
@@ -24,18 +24,21 @@ public class ManageManager : MonoBehaviour
     private CameraController cameraController;
     [SerializeField]
     private MovementController movementController;
+    [SerializeField]
+    private UIController uiController;
 
     void Awake()
     {
         //매니저 라인
         SetGridBinder();
-        SetUIBinder();
         SetSystemBinder();
         //SetEncountBinder();
+        SetPartyBinder();
 
         //컨트롤러 라인
         SetMovementBinder();
         SetCameraBinder();
+        SetUIBinder();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -48,16 +51,16 @@ public class ManageManager : MonoBehaviour
     private void SetGridBinder()
     {
         dataManager.GridSetter(gridManager);
-        uiManager.GridSetter(gridManager);
         
         cameraController.GridSetter(gridManager);
         movementController.GridSetter(gridManager);
-        
+        uiController.GridSetter(gridManager);
+
     }
 
     private void SetUIBinder()
     {
-        movementController.UISetter(uiManager);
+        movementController.UISetter(uiController);
     }
 
     private void SetSystemBinder()
@@ -71,6 +74,11 @@ public class ManageManager : MonoBehaviour
     {
     }
 
+    private void SetPartyBinder()
+    {
+        uiController.PartySetter(partyManager);
+    }
+
     private void SetCameraBinder()
     {
         movementController.CameraControlSetter(cameraController);
@@ -79,6 +87,9 @@ public class ManageManager : MonoBehaviour
     private void SetMovementBinder()
     {
         encounterManager.MoveControlSetter(movementController);
+        partyManager.MoveControlSetter(movementController);
+
+        uiController.MoveControlSetter(movementController);
     }
 
     private IEnumerator Destroyer()

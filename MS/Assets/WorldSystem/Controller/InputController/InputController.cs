@@ -68,10 +68,6 @@ public class InputController : MonoBehaviour
         //액션에 이벤트 연결
         AutoBind();
 
-        foreach(var tmp in boundActions)
-        {
-            Debug.Log($"[InputController] Bound Action: {tmp.action.name}, Event: {tmp.evt}");
-        }
 
 #warning [플레이어 입력] 액션 맵의 초기 활성화 로직 작성 필요
 #warning [플레이어 입력] 액션 맵 활성화 로직 구현 필요

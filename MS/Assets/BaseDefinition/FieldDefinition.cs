@@ -1,4 +1,6 @@
+using CharacterDefinition;
 using GroupDefinition;
+using ItemDefinition;
 using System;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -7,6 +9,7 @@ using UnityEngine;
 namespace FieldDefinition
 {
     //타일 종류 Enum 정의
+    [Serializable]
     public enum TileType
     {
         Field, // 들판
@@ -79,6 +82,17 @@ namespace FieldDefinition
         public float moveSpeed = 0.125f;
     }
 
+    [Serializable]
+    public class PartyInfo
+    {
+        public List<PartyStruct> crewList;
+        public List<EquipableItem> equipableItemList;
+        public List<BattleUseItem> battleuseItemList;
+        public int gold;
+        public int maxFood;
+        public int food;
+    }
+
     //A* 알고리즘에서 사용할 노드 클래스
     [Serializable]
     public class PathFinderNode
@@ -91,6 +105,11 @@ namespace FieldDefinition
         // G : 시작으로부터 이동했던 거리, H : |가로|+|세로| 장애물 무시하여 목표까지의 거리, F : G + H
         public int x, y, G, H;
         public int F { get { return G + H; } }
+    }
+    public interface IPartyFunc
+    {
+        void UpdateSet(Action<int, int> foodAction, Action<int> MoneyAction);
+        void UnBindUpdateSet(Action<int, int> foodAction, Action<int> MoneyAction);
     }
 
     //GridManager가 외부에 제공하는 함수
@@ -113,6 +132,8 @@ namespace FieldDefinition
         void AddMovementEvent(Action action);
         void RemoveMovementEvent(Action action);
         void StopMovement();
+        void UpdateSet(Action<float> speedAction);
+        void UnBindUpdateSet(Action<float> speedAction);
     }
 
 

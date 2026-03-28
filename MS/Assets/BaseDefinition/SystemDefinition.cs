@@ -1,4 +1,6 @@
 using FieldDefinition;
+using System;
+using TMPro;
 using UnityEngine;
 
 namespace SystemDefinition
@@ -64,6 +66,7 @@ namespace SystemDefinition
     }
 
 
+
     //매니저, 컨트롤러간 연결용 클래스
     public class IManageSetterFunc : MonoBehaviour
     {
@@ -75,12 +78,18 @@ namespace SystemDefinition
         public virtual void UISetter(IUIFunc ui)
         {
             return;
-        } 
+        }
 
         public virtual void SystemSetter(ISystemFunc system)
         {
             return;
         }
+
+        public virtual void PartySetter(IPartyFunc party)
+        {
+            return;
+        }
+
         public virtual void EncounterSetter(IEncounterFunc encounter)
         {
             return;
@@ -97,4 +106,23 @@ namespace SystemDefinition
         }
 
     }
+
+    public class HUDSetter : MonoBehaviour
+    {
+
+        protected TextMeshProUGUI valueText;
+
+        void Awake()
+        {
+            valueText = GetComponentInChildren<TextMeshProUGUI>();
+
+        }
+
+
+        public virtual void TextSet(string value)
+        {
+            valueText.text = value;
+        }
+    }
+
 }

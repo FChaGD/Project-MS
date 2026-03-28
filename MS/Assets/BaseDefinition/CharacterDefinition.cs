@@ -15,33 +15,35 @@ namespace CharacterDefinition
 
     public abstract class CharacterBase
     {
-        private int characterId;
-        private float hp;
-        private float attack_Point;
-        private float mp;
-        private float attack_Speed;
+        public int characterId; //ID
+        public float hpMax; //최대 체력
+        public float hp; //체력
+        public float attack_Point; //공격력
+        public float mpMax; //최대 마나 포인트
+        public float mp; //마나 포인트
+        public float attack_Speed; //공격 속도
 
-        private string name;
-        private RaceType raceType;
+        public string name; //이름
+        public RaceType raceType; //종족
 
     }
 
     public class PlayableCharacter : CharacterBase
     {
-        private float loyalty;
-        private float dependency;
-        private float relationship;
+        public float loyalty; //충성도
+        public float dependency; //종속도
+        public float relationship; //친밀도
 
-        private float needed_food_at_once;
+        public float needed_food_at_once; //1회 음식 소모량
     }
 
-    struct PartyStruct
+    public struct PartyStruct
     {
         private PlayableCharacter character;
-        private int battlePosition;
-        private int sanity;
-        private int energy;
-        private float Tiredness;
+        private int battlePosition; //전투 위치
+        private int sanity; //정신력
+        private int energy; //활력
+        private float Tiredness; //피로도
     }
 
 }

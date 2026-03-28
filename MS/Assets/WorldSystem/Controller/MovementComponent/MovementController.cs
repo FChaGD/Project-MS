@@ -12,8 +12,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(MovementStateSetter))]
 public class MovementController : IManageSetterFunc, IMovementFuc
 {
-
-
     //이동 관련 부가 컴포넌트 변수
     private MovementComponent movementComponent;
     private TileSelector tileSelector;
@@ -97,6 +95,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         uiManager = ui;
     }
 
+    //시스템 매니저 받아오기
     public override void SystemSetter(ISystemFunc system)
     {
         systemManager = system;
@@ -118,9 +117,23 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         movementComponent.Movement -= action;
     }
 
+    //움직임 정지
     public void StopMovement()
     {
         movementComponent.StopMovement();
+    }
+
+    //속도 UI 업데이트 함수 등록
+    public void UpdateSet(Action<float> speedAction)
+    {
+        movementStateSetter.SpeedUpdate += speedAction;
+        movementStateSetter.SpeedUpdate(movementInfo.moveSpeed);
+    }
+
+    //속도 UI 업데이트 함수 제거
+    public void UnBindUpdateSet(Action<float> speedAction)
+    {
+        movementStateSetter.SpeedUpdate -= speedAction;
     }
 
     //셀 클릭 입력 = 경로 추가 및 제거
