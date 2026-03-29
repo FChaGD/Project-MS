@@ -38,8 +38,23 @@ public class Events
         public UnityEvent<InputAction.CallbackContext> PathCheckUI;
     }
 
+    [Serializable]
+    public class SystemUIEvent
+    {
+        //Inspector에 노출될 UnityEvent
+        [Header("System Events")]
+        public UnityEvent<InputAction.CallbackContext> Inventory;
+        public UnityEvent<InputAction.CallbackContext> Map;
+        public UnityEvent<InputAction.CallbackContext> Character;
+        public UnityEvent<InputAction.CallbackContext> Quest;
+        public UnityEvent<InputAction.CallbackContext> Party;
+        public UnityEvent<InputAction.CallbackContext> Pause;
+    }
+
+
     public CameraEvent Camera;
     public WorldEvent World;
+    public SystemUIEvent SystemUI;
 
 }
 
