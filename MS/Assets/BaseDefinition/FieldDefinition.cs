@@ -35,29 +35,14 @@ namespace FieldDefinition
     public class InfluenceData
     {
         //영토로 삼고 있는 국가와 영향력
-        private ContryType base_group;
+        private Contry base_group;
         private float baseGroupInfluPower;
         //지역을 실질적으로 다스리는 조직과 영향력
-        private GroupType sub_group;
+        private BaseGroup sub_group;
         private float subGroupInfluPower;
         //지역에 영향을 끼치는 종교단체
-        private ReligionType religion_group;
+        private Religion religion_group;
 
-        public ContryType Base_Group {
-            get { return base_group; }
-            set { base_group = value; }
-        }
-        public GroupType Sub_Group
-        {
-            get { return sub_group; }
-            set { sub_group = value; }
-        }
-        public ReligionType Religion_Group
-        {
-            get { return religion_group; }
-            set { religion_group = value; }
-
-        }
     }
 
     //플레이어 이동 관련 정보 클래스
@@ -85,7 +70,7 @@ namespace FieldDefinition
     [Serializable]
     public class PartyInfo
     {
-        public List<PartyStruct> crewList;
+        public List<PlayableCharacter> crewList;
         public List<EquipableItem> equipableItemList;
         public List<BattleUseItem> battleuseItemList;
         public int gold;
@@ -126,12 +111,14 @@ namespace FieldDefinition
 
     }
 
+
+
     //MovementController가 외부에 제공하는 함수
     public interface IMovementFuc
     {
+        void StopMovement();
         void AddMovementEvent(Action action);
         void RemoveMovementEvent(Action action);
-        void StopMovement();
         void UpdateSet(Action<float> speedAction);
         void UnBindUpdateSet(Action<float> speedAction);
     }

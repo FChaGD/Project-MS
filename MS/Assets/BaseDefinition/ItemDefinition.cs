@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System;
 
 namespace ItemDefinition
 {
@@ -18,6 +18,7 @@ namespace ItemDefinition
         protected abstract void Use();
     }
 
+    [Serializable]
     public class EquipableItem : UseableItem
     {
         protected override void Use()
@@ -26,6 +27,7 @@ namespace ItemDefinition
         }
     }
 
+    [Serializable]
     public class BattleUseItem : UseableItem
     {
         protected override void Use()
