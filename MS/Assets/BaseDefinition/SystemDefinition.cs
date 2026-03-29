@@ -40,6 +40,7 @@ namespace SystemDefinition
     //게임 시스템의 상태
     public enum GameModeType
     {
+        System, //화면 가득 채운 UI 상태
         World, //월드 이동 상태
         Base, //마을, 거점 등 인물 상태
         Dialog, //대화창 상태

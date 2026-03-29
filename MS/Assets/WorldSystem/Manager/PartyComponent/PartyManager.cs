@@ -26,14 +26,20 @@ public class PartyManager : IManageSetterFunc, IPartyFunc
         goldDeclarer = GetComponent<PartyGoldDeclarer>();
         foodDeclarer = GetComponent<PartyFoodDeclarer>();
 
-        _partyInfo.crewList = new List<PartyStruct>();
+        _partyInfo.crewList = new List<PlayableCharacter>();
         _partyInfo.equipableItemList = new List<EquipableItem>();
         _partyInfo.battleuseItemList = new List<BattleUseItem>();
+
 
 #warning [파티] 플레이어 정보 불러오는 기능 필요
 
         goldDeclarer.Init(_partyInfo);
         foodDeclarer.Init(_partyInfo);
+    }
+
+    void Start()
+    {
+
     }
 
 
