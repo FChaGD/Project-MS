@@ -143,7 +143,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         if (!context.performed) return;
 
         //이동중이거나 게임모드가 월드 상태가 아니라면 작동 X
-        if (movementComponent.isMoving || systemManager.GetGameMode() is WorldMode)
+        if (movementComponent.isMoving || systemManager.GetGameMode() is not WorldMode)
         {
             return;
         }
