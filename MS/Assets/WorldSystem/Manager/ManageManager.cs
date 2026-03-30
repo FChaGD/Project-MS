@@ -21,6 +21,8 @@ public class ManageManager : MonoBehaviour
     //컨트롤러 라인
     [Header("컨트롤 라인")]
     [SerializeField]
+    private InputController inputController;
+    [SerializeField]
     private CameraController cameraController;
     [SerializeField]
     private MovementController movementController;
@@ -36,6 +38,7 @@ public class ManageManager : MonoBehaviour
         SetPartyBinder();
 
         //컨트롤러 라인
+        SetInputBinder();
         SetMovementBinder();
         SetCameraBinder();
         SetUIBinder();
@@ -60,6 +63,8 @@ public class ManageManager : MonoBehaviour
 
     private void SetUIBinder()
     {
+        systemManager.UISetter(uiController);
+
         movementController.UISetter(uiController);
     }
 
@@ -79,8 +84,15 @@ public class ManageManager : MonoBehaviour
         uiController.PartySetter(partyManager);
     }
 
+    private void SetInputBinder()
+    {
+        systemManager.InputSetter(inputController);
+    }
+
     private void SetCameraBinder()
     {
+        systemManager.CameraControlSetter(cameraController);
+
         movementController.CameraControlSetter(cameraController);
     }
 

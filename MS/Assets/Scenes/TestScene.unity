@@ -851,6 +851,25 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+    SystemUI:
+      Inventory:
+        m_PersistentCalls:
+          m_Calls: []
+      Map:
+        m_PersistentCalls:
+          m_Calls: []
+      Character:
+        m_PersistentCalls:
+          m_Calls: []
+      Quest:
+        m_PersistentCalls:
+          m_Calls: []
+      Party:
+        m_PersistentCalls:
+          m_Calls: []
+      Pause:
+        m_PersistentCalls:
+          m_Calls: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1976,6 +1995,7 @@ MonoBehaviour:
   systemManager: {fileID: 1396614875}
   encounterManager: {fileID: 1850479095}
   partyManager: {fileID: 1421027557}
+  inputController: {fileID: 510474032}
   cameraController: {fileID: 519420033}
   movementController: {fileID: 1755145360}
   uiController: {fileID: 922401858}

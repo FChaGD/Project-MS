@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using SystemDefinition;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -59,7 +60,7 @@ public class Events
 }
 
 
-public class InputController : MonoBehaviour
+public class InputController : IManageSetterFunc, IInputFunc
 {
     //인풋 액션 에셋
     [SerializeField] private InputActionAsset inputActionAsset;
