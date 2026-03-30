@@ -73,12 +73,14 @@ public class InputController : IManageSetterFunc, IInputFunc
     //액션 맵
     private InputActionMap cameraMap;
     private InputActionMap worldInputMap;
+    private InputActionMap systemUIMap;
 
     void Awake()
     {
         //액션 맵 받아오기
         cameraMap = inputActionAsset.FindActionMap("Camera");
         worldInputMap = inputActionAsset.FindActionMap("World");
+        systemUIMap = inputActionAsset.FindActionMap("SystemUI");
 
 
         //액션에 이벤트 연결
@@ -90,6 +92,7 @@ public class InputController : IManageSetterFunc, IInputFunc
 
         cameraMap.Enable();
         worldInputMap.Enable();
+        systemUIMap.Enable();
 
     }
 
