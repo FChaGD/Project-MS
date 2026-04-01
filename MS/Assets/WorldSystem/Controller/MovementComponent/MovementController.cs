@@ -142,6 +142,7 @@ public class MovementController : IManageSetterFunc, IMovementFuc
         //중복실행 방지
         if (!context.performed) return;
 
+
         //이동중이거나 게임모드가 월드 상태가 아니라면 작동 X
         if (movementComponent.isMoving || systemManager.GetGameMode() is not WorldMode)
         {

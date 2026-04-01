@@ -90,6 +90,11 @@ public class InputController : IManageSetterFunc, IInputFunc
 #warning [플레이어 입력] 액션 맵의 초기 활성화 로직 작성 필요
 #warning [플레이어 입력] 액션 맵 활성화 로직 구현 필요
 
+        foreach (var map in inputActionAsset.actionMaps)
+        {
+            Debug.Log($"맵 이름: {map.name}"); // UI가 있는지 확인
+        }
+
         cameraMap.Enable();
         worldInputMap.Enable();
         systemUIMap.Enable();

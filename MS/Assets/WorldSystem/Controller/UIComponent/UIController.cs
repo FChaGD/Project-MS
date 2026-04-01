@@ -1,4 +1,5 @@
 using FieldDefinition;
+using ItemDefinition;
 using System.Collections;
 using SystemDefinition;
 using UnityEngine;
@@ -9,6 +10,12 @@ public class UIController : IManageSetterFunc, IUIFunc
     //내부 UI 컴포넌트 변수
     private FieldInfoSetter fieldInfoSetter;
     private WorldUISetter worldUISetter;
+    private CivilUISetter civilUISetter;
+    private BattleUISetter battleUISetter;
+    private DialogUISetter dialogUISetter;
+    private SystemUISetter systemUISetter;
+    private PauseUISetter pauseUISetter;
+
 
     //외부 컨트롤러 매니저 변수
     private IGridFunc gridManager;
@@ -19,6 +26,11 @@ public class UIController : IManageSetterFunc, IUIFunc
     {
         fieldInfoSetter = GetComponent<FieldInfoSetter>();
         worldUISetter = GetComponent<WorldUISetter>();
+        civilUISetter = GetComponent<CivilUISetter>();
+        battleUISetter = GetComponent<BattleUISetter>();
+        dialogUISetter = GetComponent<DialogUISetter>();
+        systemUISetter = GetComponent<SystemUISetter>();
+        pauseUISetter = GetComponent<PauseUISetter>();
     }
     
     //그리드매니저 불러오기

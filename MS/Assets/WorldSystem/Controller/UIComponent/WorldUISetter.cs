@@ -10,7 +10,7 @@ public class WorldUISetter : MonoBehaviour
     [SerializeField]
     private GameObject partyInfoPanel;
     [SerializeField]
-    private GameObject pathCheckUI;
+    private GameObject sideUI;
 
     //파티 정보 제어 Setter들
     private FoodSetter foodSetter;
@@ -19,16 +19,16 @@ public class WorldUISetter : MonoBehaviour
 
 
     //경로 검사 관련 UI 변수들
-    private Animator pathCheckUIAnmation;
-    private int pathCheckUICurState = Animator.StringToHash("CurState");
-    private int pathCheckUIIsChanging = Animator.StringToHash("isChanging");
+    private Animator SideUIAnmation;
+    private int SideUICurState = Animator.StringToHash("CurState");
+    private int SideUIIsChanging = Animator.StringToHash("isChanging");
     private int openTrigger = Animator.StringToHash("OpenTrigger");
     private int closeTrigger = Animator.StringToHash("CloseTrigger");
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pathCheckUIAnmation = pathCheckUI.GetComponent<Animator>();
+        SideUIAnmation = sideUI.GetComponent<Animator>();
 
         foodSetter = partyInfoPanel.GetComponentInChildren<FoodSetter>();
         speedSetter = partyInfoPanel.GetComponentInChildren<SpeedSetter>();
@@ -42,27 +42,27 @@ public class WorldUISetter : MonoBehaviour
     public void PathCheckUIToggle()
     {
 
-        if (pathCheckUIAnmation.GetBool(pathCheckUICurState))
+        if (SideUIAnmation.GetBool(SideUICurState))
         {
             //만약 애니메이션이 진행중이라면 종료
-            if (pathCheckUIAnmation.GetBool(pathCheckUIIsChanging))
+            if (SideUIAnmation.GetBool(SideUIIsChanging))
             {
                 return;
             }
 
             //open 상태라면 닫는 트리거 발동
-            pathCheckUIAnmation.SetTrigger(closeTrigger);
+            SideUIAnmation.SetTrigger(closeTrigger);
         }
         else
         {
             //만약 애니메이션이 진행중이라면 종료
-            if (pathCheckUIAnmation.GetBool(pathCheckUIIsChanging))
+            if (SideUIAnmation.GetBool(SideUIIsChanging))
             {
                 return;
             }
 
             //close 상태라면 여는 트리거 발동
-            pathCheckUIAnmation.SetTrigger(openTrigger);
+            SideUIAnmation.SetTrigger(openTrigger);
         }
     }
     
