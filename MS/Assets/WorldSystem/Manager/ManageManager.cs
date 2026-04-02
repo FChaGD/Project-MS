@@ -71,6 +71,7 @@ public class ManageManager : MonoBehaviour
     private void SetSystemBinder()
     {
         encounterManager.SystemSetter(systemManager);
+        uiController.SystemSetter(systemManager);
 
         movementController.SystemSetter(systemManager);
     }

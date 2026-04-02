@@ -1,8 +1,9 @@
 using System.Text;
 using System;
 using UnityEngine;
+using SystemDefinition;
 
-public class WorldUISetter : MonoBehaviour
+public class WorldUISetter : BaseUIControl
 {
     //UI 객체들
     [SerializeField]
@@ -11,6 +12,9 @@ public class WorldUISetter : MonoBehaviour
     private GameObject partyInfoPanel;
     [SerializeField]
     private GameObject sideUI;
+
+
+    private FieldInfoSetter fieldInfoSetter;
 
     //파티 정보 제어 Setter들
     private FoodSetter foodSetter;
@@ -25,6 +29,12 @@ public class WorldUISetter : MonoBehaviour
     private int openTrigger = Animator.StringToHash("OpenTrigger");
     private int closeTrigger = Animator.StringToHash("CloseTrigger");
 
+    void Awake()
+    {
+
+        fieldInfoSetter = GetComponent<FieldInfoSetter>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -37,6 +47,34 @@ public class WorldUISetter : MonoBehaviour
 
     }
 
+    public override void UIOn()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void UIOff()
+    {
+        throw new NotImplementedException();
+    }
+
+    //길 추가
+    public void AddSelectedPathTile(Vector2Int xy)
+    {
+        fieldInfoSetter.AddSelectedPathTile(xy);
+
+    }
+
+    //중간 제거
+    public void RemoveSelectedPathRangeTile(Vector2Int xy)
+    {
+        fieldInfoSetter.RemoveSelectedPathRangeTile(xy);
+    }
+
+    //특정 위치 제거
+    public void RemoveSelectedPathTile(Vector2Int xy)
+    {
+        fieldInfoSetter.RemoveSelectedPathTile(xy);
+    }
 
     //경로 검사 토글
     public void PathCheckUIToggle()
