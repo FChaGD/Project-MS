@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 public class SystemManager : IManageSetterFunc, ISystemFunc
 {
     //게임 모드 리스트
+    [SerializeField]
     private Stack<Type> gameMode;
 
     //외부 매니저 컨트롤러 변수

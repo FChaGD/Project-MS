@@ -133,29 +133,9 @@ public class UIController : IManageSetterFunc, IUIFunc
 
         //중복실행 방지
         if (!context.performed) return;
-        //만약 현재 게임 모드가 시스템 게임모드라면
-        if(systemManager.GetGameMode() is SystemMode)
-        {
 
-            Debug.Log($"인벤토리 입력 시 탭 타입 : {systemUISetter.GetCurTabType()}, {typeof(InventoryTabType).Name}, {systemUISetter.GetCurTabType() == typeof(InventoryTabType)}");
-            //만약 현재 탭 포커스가 인벤토리라면
-            if (systemUISetter.GetCurTabType() == typeof(InventoryTabType)){
-                systemUISetter.UIOff();
-                systemManager.RemoveCurGameMode();
-            }
-            else
-            {
-                //만약 현재 탭 포커스가 다른 탭모드라면
-                systemUISetter.TabFocus(typeof(InventoryTabType));
-            }
-        }
-        else
-        {
-            //현재 게임 모드가 시스템 모드가 아니라면
-            systemUISetter.TabFocus(typeof(InventoryTabType));
-            systemUISetter.UIOn();
-            systemManager.SetGameMode(typeof(SystemMode));
-        }
+        SetTabInput<InventoryTabType>();
+
 
     }
 
@@ -166,11 +146,21 @@ public class UIController : IManageSetterFunc, IUIFunc
         //중복실행 방지
         if (!context.performed) return;
 
+        SetTabInput<PartyTabType>();
+
+    }
+
+    private void SetTabInput<T>()
+    {
+
         //만약 현재 게임 모드가 시스템 게임모드라면
         if (systemManager.GetGameMode() is SystemMode)
         {
-            //만약 현재 탭 포커스가 인벤토리라면
-            if (systemUISetter.GetCurTabType() == typeof(PartyTabType))
+
+            Debug.Log($"인벤토리 입력 시 탭 타입 : {systemManager.GetGameMode()}");
+            Debug.Log($"인벤토리 입력 시 탭 타입 : {systemUISetter.GetCurTabType()}, {typeof(T).Name}, {systemUISetter.GetCurTabType() == typeof(T)}");
+            //만약 현재 탭 포커스가 전환 대상 탭모드라면
+            if (systemUISetter.GetCurTabType() == typeof(T))
             {
                 systemUISetter.UIOff();
                 systemManager.RemoveCurGameMode();
@@ -178,13 +168,13 @@ public class UIController : IManageSetterFunc, IUIFunc
             else
             {
                 //만약 현재 탭 포커스가 다른 탭모드라면
-                systemUISetter.TabFocus(typeof(PartyTabType));
+                systemUISetter.TabFocus(typeof(T));
             }
         }
         else
         {
             //현재 게임 모드가 시스템 모드가 아니라면
-            systemUISetter.TabFocus(typeof(PartyTabType));
+            systemUISetter.TabFocus(typeof(T));
             systemUISetter.UIOn();
             systemManager.SetGameMode(typeof(SystemMode));
         }
