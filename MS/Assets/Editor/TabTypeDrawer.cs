@@ -32,6 +32,9 @@ public class TabTypeDrawer : PropertyDrawer
             menu.AddItem(new GUIContent("PartyTabType"), property.managedReferenceValue is PartyTabType,
                 () => { property.managedReferenceValue = new PartyTabType("Party"); property.serializedObject.ApplyModifiedProperties(); });
 
+            menu.AddItem(new GUIContent("HeroTabType"), property.managedReferenceValue is HeroTabType,
+                () => { property.managedReferenceValue = new HeroTabType("Hero"); property.serializedObject.ApplyModifiedProperties(); });
+
             menu.ShowAsContext();
         }
 

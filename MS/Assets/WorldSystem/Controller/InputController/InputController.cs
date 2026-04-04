@@ -5,6 +5,7 @@ using SystemDefinition;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 
 
 //입력 액션 갱신 규칙
@@ -46,10 +47,11 @@ public class Events
         [Header("System Events")]
         public UnityEvent<InputAction.CallbackContext> Inventory;
         public UnityEvent<InputAction.CallbackContext> Map;
-        public UnityEvent<InputAction.CallbackContext> Character;
+        public UnityEvent<InputAction.CallbackContext> Hero;
         public UnityEvent<InputAction.CallbackContext> Quest;
         public UnityEvent<InputAction.CallbackContext> Party;
         public UnityEvent<InputAction.CallbackContext> Pause;
+        public UnityEvent<InputAction.CallbackContext> Group;
     }
 
 
@@ -64,6 +66,9 @@ public class InputController : IManageSetterFunc, IInputFunc
 {
     //인풋 액션 에셋
     [SerializeField] private InputActionAsset inputActionAsset;
+
+    [SerializeField]
+    private InputSystemUIInputModule inputSystemUIInputModule;
 
     public Events events;
 

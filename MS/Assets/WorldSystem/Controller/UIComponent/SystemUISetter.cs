@@ -23,7 +23,6 @@ public class SystemUISetter : BaseUIControl
 
     //지연 생성 딕셔너리
     private Dictionary<Type, GameObject> beforeInstante = new();
-    [SerializeField]
     private SerializedDictionary<Type, GameObject> instantedTab = new();
 
     //현재 탭
@@ -37,6 +36,7 @@ public class SystemUISetter : BaseUIControl
         foreach (var entry in tabEntries)
             beforeInstante[entry.tabType.GetType()] = entry.tabPrefeb;
         curTabType = typeof(TabType);
+
     }
 
     void Start()
@@ -84,13 +84,13 @@ public class SystemUISetter : BaseUIControl
     public void TabFocus(Type focusTab)
     {
         //현재 요청된 탭이 이미 포커스되어 있다면 메서드 종료
-        if (curTabType.GetType() == focusTab) return;
+        if (curTabType == focusTab) return;
 
         // 이전 탭 비활성화
         curTab?.SetActive(false);
 
         // 이미 생성된 경우 탭 전환
-        if (instantedTab.TryGetValue(focusTab.GetType(), out var instanted))
+        if (instantedTab.TryGetValue(focusTab, out var instanted))
         {
             curTab = instanted;
             curTabType = focusTab;

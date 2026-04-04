@@ -364,6 +364,12 @@ namespace SystemDefinition
     {
         public PartyTabType(string name) : base(name) { }
     }
+
+    [Serializable]
+    public class HeroTabType : TabType
+    {
+        public HeroTabType(string name) : base(name) { }
+    }
     #endregion
 
     [Serializable]

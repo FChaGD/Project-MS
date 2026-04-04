@@ -150,6 +150,16 @@ public class UIController : IManageSetterFunc, IUIFunc
 
     }
 
+    //영웅 SystemUI 전환 입력
+    public void HeroInput(InputAction.CallbackContext context)
+    {
+
+        //중복실행 방지
+        if (!context.performed) return;
+
+        SetTabInput<HeroTabType>();
+    }
+
     private void SetTabInput<T>()
     {
 
