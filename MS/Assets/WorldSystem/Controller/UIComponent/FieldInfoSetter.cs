@@ -8,7 +8,7 @@ public class FieldInfoSetter : MonoBehaviour
 {
 
     //≈∏¿œ∏  UI
-    private Dictionary<UIType, Tile> spriteTable;
+    private Dictionary<GridUIType, Tile> spriteTable;
     private Tilemap uiTilemap;
     [SerializeField]
     private List<Vector2Int> movePath;
@@ -21,7 +21,7 @@ public class FieldInfoSetter : MonoBehaviour
 
     private void Awake()
     {
-        spriteTable = new Dictionary<UIType, Tile>();
+        spriteTable = new Dictionary<GridUIType, Tile>();
         movePath = new List<Vector2Int>();
     }
 
@@ -49,7 +49,7 @@ public class FieldInfoSetter : MonoBehaviour
     {
         movePath.Add(xy);
         Vector3Int tmp = new Vector3Int(xy.x, xy.y, zValue);
-        uiTilemap.SetTile(tmp, spriteTable[UIType.Path]);
+        uiTilemap.SetTile(tmp, spriteTable[GridUIType.Path]);
 
     }
 
@@ -66,7 +66,7 @@ public class FieldInfoSetter : MonoBehaviour
             if (movePath.IndexOf(movePath[i]) >= movePath.IndexOf(xy))
             {
                 tmp = new Vector3Int(movePath[i].x, movePath[i].y, zValue);
-                uiTilemap.SetTile(tmp, spriteTable[UIType.None]);
+                uiTilemap.SetTile(tmp, spriteTable[GridUIType.None]);
             }
         }
 
@@ -80,7 +80,7 @@ public class FieldInfoSetter : MonoBehaviour
         Vector3Int tmp = new Vector3Int(movePath[i].x, movePath[i].y, zValue);
         if (movePath.IndexOf(xy) == movePath.LastIndexOf(xy))
         {
-            uiTilemap.SetTile(tmp, spriteTable[UIType.None]);
+            uiTilemap.SetTile(tmp, spriteTable[GridUIType.None]);
         }
         movePath.Remove(xy);
     }
@@ -91,9 +91,9 @@ public class FieldInfoSetter : MonoBehaviour
     private void SetSpriteTable()
     {
         Tile tmp = Resources.Load<Tile>("Tiles/UITile/None");
-        spriteTable.Add(UIType.None, tmp);
+        spriteTable.Add(GridUIType.None, tmp);
         tmp = Resources.Load<Tile>("Tiles/UITile/Selected");
-        spriteTable.Add(UIType.Path, tmp);
+        spriteTable.Add(GridUIType.Path, tmp);
     }
 
 }

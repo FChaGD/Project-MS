@@ -6,13 +6,6 @@ using UnityEngine;
 
 namespace SystemDefinition
 {
-    //기능 UI
-    public enum UIType
-    {
-        None = 0,
-        Path, //플레이어 이동 경로 표시 UI
-
-    }
 
     [System.Serializable]
     public class CameraSettings
@@ -228,12 +221,29 @@ namespace SystemDefinition
         void AddSelectedPathTile(Vector2Int xy);
         void RemoveSelectedPathRangeTile(Vector2Int xy);
         void RemoveSelectedPathTile(Vector2Int xy);
+
+        /// <summary>
+        /// 모드를 기반으로 UI를 끄고 킵니다.
+        /// </summary>
+        /// <param name="OnOff">True = UI 켜기, False = UI 끄기</param>
+        /// <param name="gamemode">제어 대상 게임 모드</param>
+        void UIModeChange(bool OnOff, Type gamemode);
     }
 
     public interface ISystemFunc
     {
         BaseGameMode GetGameMode();
+
+        /// <summary>
+        /// 요청 게임모드로 전환
+        /// </summary>
+        /// <param name="request">전환할 대상(BaseGameMode 기반 클래스 타입)</param>
         void SetGameMode(Type request);
+
+        /// <summary>
+        /// 현재 게임모드를 한단계 종료 
+        /// </summary>
+        void RemoveCurGameMode();
     }
 
     public interface ICameraFunc
@@ -293,6 +303,7 @@ namespace SystemDefinition
 
     }
 
+    //WorldMode HUD UI 제어 모노비헤이비어 정의
     public class HUDSetter : MonoBehaviour
     {
 
@@ -310,5 +321,65 @@ namespace SystemDefinition
             valueText.text = value;
         }
     }
+
+
+    //UIController 하위 컴포넌트 상속용 MonBehaviour 클래스
+    public abstract class BaseUIControl : MonoBehaviour
+    {
+        public abstract void UIOn();
+
+        public abstract void UIOff();
+
+        public virtual bool IsActive()
+        {
+            return false;
+        }
+    }
+
+    //기능 UI
+    public enum GridUIType
+    {
+        None = 0,
+        Path, //플레이어 이동 경로 표시 UI
+
+    }
+
+    #region 탭 UI 타입 정의
+    [Serializable]
+    public abstract class TabType
+    {
+        public string Name { get; set; }
+        protected TabType(string name) { Name = name; }
+
+    }
+
+    [Serializable]
+    public class InventoryTabType : TabType
+    {
+        public InventoryTabType(string name) : base(name) { } 
+    }
+
+    [Serializable]
+    public class PartyTabType : TabType
+    {
+        public PartyTabType(string name) : base(name) { }
+    }
+
+    [Serializable]
+    public class HeroTabType : TabType
+    {
+        public HeroTabType(string name) : base(name) { }
+    }
+    #endregion
+
+    [Serializable]
+    public struct SystemTabEntry
+    {
+        [SerializeReference]
+        public TabType tabType;
+        public GameObject tabPrefeb;
+    }
+
+
 
 }

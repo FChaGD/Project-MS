@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 public class SystemManager : IManageSetterFunc, ISystemFunc
 {
     //게임 모드 리스트
+    [SerializeField]
     private Stack<Type> gameMode;
 
     //외부 매니저 컨트롤러 변수
@@ -77,6 +78,14 @@ public class SystemManager : IManageSetterFunc, ISystemFunc
     public void SetGameMode(Type request)
     {
         BaseGameMode requestMode = modeFactory[request];
+
+        if(gameMode.Peek() == request)
+        {
+            //이미 최상단이 해당 모드일 경우 종료
+            modeFactory[gameMode.Pop()].EndSet();
+            modeFactory[gameMode.Peek()].SetUp();
+        }
+
         //변환 요청 모드가 타 모드 위에 얹기 가능한 모드일 경우
         if (requestMode is CoverableMode)
         {
@@ -105,7 +114,15 @@ public class SystemManager : IManageSetterFunc, ISystemFunc
         }
 
     }
-    
+
+    //현재 게임모드 종료
+    public void RemoveCurGameMode()
+    {
+        modeFactory[gameMode.Pop()].EndSet();
+        modeFactory[gameMode.Peek()].SetUp();
+    }
+
+
     private void SetCoverableMode(Type request, BaseGameMode requestMode)
     {
 

@@ -12,7 +12,11 @@ namespace CharacterDefinition
         Long_Ear, //장이족=엘프
         Iron_Hander, //제장족=드워프
         Vampir, //취혈족=벰파이어
-        fathring, //신환족=천사
+        Fathring, //신환족=천사
+        Succuber, //몽열족=서큐버스(몽마)
+        Sprit, //정령족
+        Seaborn, //어인족
+        Giant, //거인족
 
 
     }
@@ -26,6 +30,8 @@ namespace CharacterDefinition
         public float mpMax; //최대 마나 포인트
         public float dpMax; //최대 신성력
         public float baseAttackSpeed; //공격 속도
+        public float maxSanity; //정신력 최대치
+        public float maxEnergy; //활력 최대치
 
         public RaceType baseRaceType; //종족
         public DependencyStyle baseRaceIsolation; //종족 배타성
@@ -38,7 +44,6 @@ namespace CharacterDefinition
 
         public Religion baseReligion; //기본 종교
         public DependencyStyle baseFath; //기본 신앙 정도
-        public DependencyStyle baseIsolation; //종교 기본 배타성
         
         public SocialSystem baseSystem; //기본 사회사상
         public DependencyStyle politicTendency; //정치 편향성
@@ -75,9 +80,8 @@ namespace CharacterDefinition
 
 
         public int battlePosition; //전투 위치
-        public int sanity; //정신력
-        public int energy; //활력
-        public float Tiredness; //피로도
+        public float sanity; //정신력
+        public float energy; //활력
 
         public float base_needed_food; //1회 음식 기본 소모량
         public float base_Speed; //캐릭터 월드 이동 속도

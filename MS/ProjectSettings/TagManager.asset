@@ -7,6 +7,7 @@ TagManager:
   - Map
   - Manager
   - UI
+  - BattleCamera
   layers:
   - Default
   - TransparentFX
