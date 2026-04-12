@@ -12,7 +12,11 @@ namespace CharacterDefinition
         Long_Ear, //장이족=엘프
         Iron_Hander, //제장족=드워프
         Vampir, //취혈족=벰파이어
-        fathring, //신환족=천사
+        Fathring, //신환족=천사
+        Succuber, //몽열족=서큐버스(몽마)
+        Sprit, //정령족
+        Seaborn, //어인족
+        Giant, //거인족
 
 
     }
