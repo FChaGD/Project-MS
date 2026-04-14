@@ -12,14 +12,14 @@ public class ManageManager : MonoBehaviour
     [SerializeField]
     private DataManager dataManager;
     [SerializeField]
-    private SystemManager systemManager;
-    [SerializeField]
     private EncounterManager encounterManager;
     [SerializeField]
     private PartyManager partyManager;
 
     //컨트롤러 라인
     [Header("컨트롤 라인")]
+    [SerializeField]
+    private SystemController systemController;
     [SerializeField]
     private InputController inputController;
     [SerializeField]
@@ -28,16 +28,18 @@ public class ManageManager : MonoBehaviour
     private MovementController movementController;
     [SerializeField]
     private UIController uiController;
+    [SerializeField]
+    private BattleController battleController;
 
     void Awake()
     {
         //매니저 라인
         SetGridBinder();
-        SetSystemBinder();
         //SetEncountBinder();
         SetPartyBinder();
 
         //컨트롤러 라인
+        SetSystemBinder();
         SetInputBinder();
         SetMovementBinder();
         SetCameraBinder();
@@ -63,17 +65,17 @@ public class ManageManager : MonoBehaviour
 
     private void SetUIBinder()
     {
-        systemManager.UISetter(uiController);
 
+        systemController.UISetter(uiController);
         movementController.UISetter(uiController);
     }
 
     private void SetSystemBinder()
     {
-        encounterManager.SystemSetter(systemManager);
-        uiController.SystemSetter(systemManager);
+        encounterManager.SystemSetter(systemController);
+        uiController.SystemSetter(systemController);
 
-        movementController.SystemSetter(systemManager);
+        movementController.SystemSetter(systemController);
     }
 
     private void SetEncountBinder()
@@ -87,13 +89,13 @@ public class ManageManager : MonoBehaviour
 
     private void SetInputBinder()
     {
-        systemManager.InputSetter(inputController);
+        systemController.InputSetter(inputController);
     }
 
     private void SetCameraBinder()
     {
-        systemManager.CameraControlSetter(cameraController);
 
+        systemController.CameraControlSetter(cameraController);
         movementController.CameraControlSetter(cameraController);
     }
 

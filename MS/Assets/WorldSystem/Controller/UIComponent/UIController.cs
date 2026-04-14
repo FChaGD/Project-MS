@@ -110,9 +110,23 @@ public class UIController : IManageSetterFunc, IUIFunc
         worldUISetter.RemoveSelectedPathTile(xy);
     }
 
+    /// <summary>
+    /// UI를 끄고 키는 public 함수
+    /// bool을 통해 UI를 활성화할지 비활성화 할지 결정.
+    /// Type을 통해 제어할 UI 종류를 결정
+    /// </summary>
+    /// <param name="OnOff">True == UI 켜기, False == UI 끄기</param>
+    /// <param name="gamemode">GameModeBase 기반 클래스 타입</param>
     public void UIModeChange(bool OnOff, Type gamemode)
     {
-
+        if (OnOff) {
+            uiControlList[gamemode].UIOn();
+        }
+        else
+        {
+            uiControlList[gamemode].UIOff();
+        }
+            
     }
 
     //경로 분석 UI toggle 입력
@@ -127,38 +141,20 @@ public class UIController : IManageSetterFunc, IUIFunc
 
     }
 
-    //소지품 SystemUI 전환 입력
-    public void InventoryInput(InputAction.CallbackContext context)
+    public void TabModeChange(Type tabType)
     {
-
-        //중복실행 방지
-        if (!context.performed) return;
-
-        SetTabInput<InventoryTabType>();
-
+        switch (tabType)
+        {
+            case var t when t == typeof(InventoryTabType): SetTabInput<InventoryTabType>(); break;
+            case var t when t == typeof(PartyTabType): SetTabInput<PartyTabType>(); break;
+            case var t when t == typeof(HeroTabType): SetTabInput<HeroTabType>(); break;
+            default:
+                Debug.LogWarning("알 수 없는 타입");
+                break;
+        }
 
     }
 
-    //파티 SystemUI 전환 입력
-    public void PartyInput(InputAction.CallbackContext context)
-    {
-
-        //중복실행 방지
-        if (!context.performed) return;
-
-        SetTabInput<PartyTabType>();
-
-    }
-
-    //영웅 SystemUI 전환 입력
-    public void HeroInput(InputAction.CallbackContext context)
-    {
-
-        //중복실행 방지
-        if (!context.performed) return;
-
-        SetTabInput<HeroTabType>();
-    }
 
     private void SetTabInput<T>()
     {

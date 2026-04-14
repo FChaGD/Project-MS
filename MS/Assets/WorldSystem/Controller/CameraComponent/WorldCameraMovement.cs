@@ -5,11 +5,10 @@ using UnityEngine.InputSystem;
 
 public class WorldCameraMovement : MonoBehaviour
 {
-    private CameraController cameraController;
     private CameraSettings _cameraSettings;
 
     //카메라와 카메라 목표
-    private Camera selfCamera;
+    private Camera worldCamera;
     private Transform cameraTransform;
     private Transform cameraTarget;
 
@@ -26,11 +25,8 @@ public class WorldCameraMovement : MonoBehaviour
     private bool isDragging = false;
     private Vector2 dragDirection;
 
-    private void Awake()
+    void Awake()
     {
-        selfCamera = GetComponent<Camera>();
-        cameraTransform = GetComponent<Transform>();
-        cameraController = GetComponent<CameraController>();
 
     }
 
@@ -52,6 +48,8 @@ public class WorldCameraMovement : MonoBehaviour
     public void Init(CameraSettings cameraSettings)
     {
         _cameraSettings = cameraSettings;
+        worldCamera = _cameraSettings.worldCamera.GetComponent<Camera>();
+        cameraTransform = _cameraSettings.worldCamera.GetComponent<Transform>();
     }
 
 
@@ -67,7 +65,7 @@ public class WorldCameraMovement : MonoBehaviour
 
     public void OnCameraZoom()
     {
-        selfCamera.orthographicSize = _cameraSettings.distance;
+        worldCamera.orthographicSize = _cameraSettings.distance;
     }
 
     //카메라 고정 입력
@@ -82,7 +80,7 @@ public class WorldCameraMovement : MonoBehaviour
                 StopCoroutine(coroutine);
                 isFixedActivating = false;
             }
-            selfCamera.transform.position = freeCameraTransform;
+            worldCamera.transform.position = freeCameraTransform;
 
         }
         //카메라 고정이 되었다면
@@ -110,13 +108,21 @@ public class WorldCameraMovement : MonoBehaviour
     //플레이어 캐릭터에게 카메라 이동 입력
     public void OnFocusCamera()
     {
-        selfCamera.transform.position = new Vector3(cameraTarget.position.x, cameraTarget.position.y, -10);
-        freeCameraTransform = selfCamera.transform.position;
+        //월드카메라가 포커스 되지 않았다면 중단
+        if (!IsWorldCameraFocused())
+            return;
+
+        worldCamera.transform.position = new Vector3(cameraTarget.position.x, cameraTarget.position.y, -10);
+        freeCameraTransform = worldCamera.transform.position;
     }
 
     //고정 카메라 이동
     public void CameraFixedMove()
     {
+        //월드카메라가 포커스 되지 않았다면 중단
+        if (!IsWorldCameraFocused())
+            return;
+
         // 캐릭터 고정 이동
         if (!isFixedActivating)
         {
@@ -159,6 +165,10 @@ public class WorldCameraMovement : MonoBehaviour
     //카메라 경계를 넘어 마우스 커서 위치시 카메라 이동
     private void CameraPushMove()
     {
+        //월드카메라가 포커스 되지 않았다면 중단
+        if (!IsWorldCameraFocused())
+            return;
+
         //마우스 위치 잡기
         //마우스가 Null이면 화면 밀기 종료
         if (Mouse.current == null)
@@ -201,7 +211,7 @@ public class WorldCameraMovement : MonoBehaviour
         //맵 경계 체크
         Vector2 direction = CameraPositionCheck(moveDir * Time.deltaTime, _cameraSettings.pushSpeed);
 
-        transform.Translate(direction * _cameraSettings.pushSpeed, Space.World);
+        cameraTransform.Translate(direction * _cameraSettings.pushSpeed, Space.World);
 
         ////자유 카메라 위치 저장
         freeCameraTransform = cameraTransform.position;
@@ -211,6 +221,12 @@ public class WorldCameraMovement : MonoBehaviour
     //카메라 드래그 이동
     private void CameraDragMove()
     {
+
+        if (!IsWorldCameraFocused())
+        {
+            return;
+        }
+
         if (isDragging)
         {
 
@@ -218,13 +234,14 @@ public class WorldCameraMovement : MonoBehaviour
             dragDirection = CameraPositionCheck((-1) * dragDirection, _cameraSettings.dragSpeed);
 
             Vector2 move = dragDirection * _cameraSettings.dragSpeed;
-            transform.Translate(move, Space.World);
+            cameraTransform.Translate(move, Space.World);
 
             //자유 카메라 위치 저장
             freeCameraTransform = cameraTransform.position;
 
         }
     }
+
 
     //카메라 이동 가능 범위 제한
     private Vector2 CameraPositionCheck(Vector2 direction, float speed)
@@ -279,6 +296,14 @@ public class WorldCameraMovement : MonoBehaviour
 
         return direction;
 
+    }
+
+    private bool IsWorldCameraFocused()
+    {
+        //월드카메라가 포커스 되지 않았다면 중단
+        if (_cameraSettings.foucsedCamera != _cameraSettings.worldCamera)
+            return false;
+        return true;
     }
 
 }

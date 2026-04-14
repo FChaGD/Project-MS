@@ -1,5 +1,6 @@
 using FieldDefinition;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.XR.OpenVR;
 using UnityEngine;
@@ -10,25 +11,42 @@ namespace SystemDefinition
     [System.Serializable]
     public class CameraSettings
     {
-        //카메라 줌인아웃 관련
+        //카메라 오브젝트
+        public GameObject worldCamera;
+        public GameObject battleCamera;
+
+        //포커스된 카메라
+        public GameObject foucsedCamera;
+
+        //world 카메라 줌인아웃 관련
         public float maxZoom;
         public float minZoom;
         public float distance;
         public float zoomSpeed;
 
-        //카메라 고정 상태
+        //world 카메라 고정 상태
         public bool anchorSet;
 
 
-        //카메라 자율 이동
+        //world 카메라 자율 이동
         public float dragSpeed;
         public float pushSpeed;
 
-        //카메라 월드 경계 정하기
+        //world 카메라 월드 경계 정하기
         public Vector2 max;
         public Vector2 min;
         public float cameraHalfHeight;
         public float cameraHalfWidth;
+    }
+
+    [Serializable]
+    public class SystemInfoContainer
+    {
+        //게임 모드 리스트
+        public Stack<Type> gameMode;
+
+        //모드 전환 딕셔너리
+        public Dictionary<Type, BaseGameMode> modeFactory;
     }
 
     #region 게임 시스템 모드
@@ -113,25 +131,6 @@ namespace SystemDefinition
         }
     }
 
-    //전투 모드
-    public class BattleMode : FloorMode
-    {
-        public BattleMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
-        {
-
-        }
-
-        public override void SetUp()
-        {
-
-        }
-
-        public override void EndSet()
-        {
-
-        }
-    }
-
     //마을, 거점 등 인물 상태
     public class CivilMode : FloorMode
     {
@@ -153,6 +152,26 @@ namespace SystemDefinition
 
     #endregion
     #region ChangableMode 상속 모드
+
+    //전투 모드
+    public class BattleMode : ChangableMode
+    {
+        public BattleMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        {
+
+        }
+
+        public override void SetUp()
+        {
+
+        }
+
+        public override void EndSet()
+        {
+
+        }
+    }
+
     //화면 가득 채운 UI 상태
     public class SystemMode : ChangableMode
     {
@@ -228,6 +247,12 @@ namespace SystemDefinition
         /// <param name="OnOff">True = UI 켜기, False = UI 끄기</param>
         /// <param name="gamemode">제어 대상 게임 모드</param>
         void UIModeChange(bool OnOff, Type gamemode);
+
+        /// <summary>
+        /// TabType을 받아 SystemUI를 전환합니다.
+        /// </summary>
+        /// <param name="tabType">TabType 기반 클래스의 타입</param>
+        void TabModeChange(Type tabType);
     }
 
     public interface ISystemFunc
@@ -249,6 +274,10 @@ namespace SystemDefinition
     public interface ICameraFunc
     {
         void CameraUpdate();
+
+        void FocusWorldCamera();
+
+        void FocusBattleCamera();
     }
 
     public interface IInputFunc
@@ -256,9 +285,14 @@ namespace SystemDefinition
 
     }
 
+    public interface IBattleFunc
+    {
+
+    }
+
     #endregion
 
-    //매니저, 컨트롤러간 연결용 클래스
+#region 매니저, 컨트롤러간 연결용 클래스
     public class IManageSetterFunc : MonoBehaviour
     {
         public virtual void GridSetter(IGridFunc grid)
@@ -302,6 +336,7 @@ namespace SystemDefinition
         }
 
     }
+    #endregion
 
     //WorldMode HUD UI 제어 모노비헤이비어 정의
     public class HUDSetter : MonoBehaviour

@@ -7,36 +7,55 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CameraSettingController))]
 public class CameraController : IManageSetterFunc, ICameraFunc
 {
+
+    //카메라 컨트롤러 공유 정보 컨테이너
+    private CameraSettings cameraSettings;
+
     //카메라 부가 컴포넌트 변수
-    WorldCameraMovement worldCameraMovement;
-    CameraSettingController cameraSettingController;
+    private WorldCameraMovement worldCameraMovement;
+    private CameraSettingController cameraSettingController;
+    private CameraFocusChangeComponent cameraFocusChangeComponent;
+
+    //카메라 컴포넌트
+    [SerializeField]
+    private GameObject worldCamera;
+    [SerializeField]
+    private GameObject battleCamera;
 
 
     //외부 참조 요소
     private IGridFunc gridManager;
 
-    //카메라 세팅 정보
-    private CameraSettings cameraSettings;
 
 
     void Awake()
     {
         worldCameraMovement = GetComponent<WorldCameraMovement>();
         cameraSettingController = GetComponent<CameraSettingController>();
+        cameraFocusChangeComponent = GetComponent<CameraFocusChangeComponent>();
 
         cameraSettings = new CameraSettings();
+        cameraSettings.worldCamera = worldCamera;
+        cameraSettings.battleCamera = battleCamera;
+
         worldCameraMovement.Init(cameraSettings);
         cameraSettingController.Init(cameraSettings);
+        cameraFocusChangeComponent.Init(cameraSettings);
+
+#warning [카메라] 카메라 초기 포커스 값 설정 필요
+        cameraSettings.foucsedCamera = cameraSettings.worldCamera;
+        FocusWorldCamera();
 
     }
 
+    #region 외부 매니저 컨트롤러
     //그리드매니저 받아오기
     public override void GridSetter(IGridFunc grid)
     {
         gridManager = grid;
     }
+    #endregion
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
@@ -57,6 +76,16 @@ public class CameraController : IManageSetterFunc, ICameraFunc
 #warning [미완성] 배틀 카메라 추가시 수정 필요
         worldCameraMovement.CameraUpdate();
 
+    }
+
+    public void FocusWorldCamera()
+    {
+        cameraFocusChangeComponent.FocusOnWorldCamera();
+    }
+
+    public void FocusBattleCamera()
+    {
+        cameraFocusChangeComponent.FocusOnBattleCamera();
     }
     
 
@@ -100,21 +129,21 @@ public class CameraController : IManageSetterFunc, ICameraFunc
     // 드래그이동 클릭 입력
     public void OnDragPress(InputAction.CallbackContext context)
     {
-#warning [미완성] 시스템 상태에 따른 대책 정의 필요
+#warning [카메라] 시스템 상태에 따른 대책 정의 필요
         worldCameraMovement.OnDragPress(context.ReadValueAsButton());
     }
 
     //마우스 드래그 입력
     public void OnDragDelta(InputAction.CallbackContext context)
     {
-#warning [미완성] 시스템 상태에 따른 대책 정의 필요
+#warning [카메라] 시스템 상태에 따른 대책 정의 필요
         worldCameraMovement.OnDragDelta(context.ReadValue<Vector2>());
     }
 
     //플레이어 캐릭터에게 카메라 이동 입력
     public void OnFocusCamera(InputAction.CallbackContext context)
     {
-#warning [미완성] 시스템 상태에 따른 대책 정의 필요
+#warning [카메라] 시스템 상태에 따른 대책 정의 필요
         worldCameraMovement.OnFocusCamera();
     }
 

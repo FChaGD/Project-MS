@@ -49,12 +49,12 @@ public class WorldUISetter : BaseUIControl
 
     public override void UIOn()
     {
-        throw new NotImplementedException();
+        worldUIPanel.SetActive(true);
     }
 
     public override void UIOff()
     {
-        throw new NotImplementedException();
+        worldUIPanel.SetActive(false);
     }
 
     //±æ Ãß°¡
