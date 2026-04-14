@@ -1,14 +1,25 @@
 using UnityEngine;
+using AYellowpaper.SerializedCollections;
 
+//전투 시작시 배경화면을 해상도에 맞춰 크기를 키우는 스크립트
 public class BattleFieldManager : MonoBehaviour
 {
+    [Header("배경화면과 카메라")]
+    [SerializeField]
     private SpriteRenderer background;
+    [SerializeField]
     private Camera battleCamera;
+
+    [Header("캐릭터 배치")]
+    [SerializeField]
+    [SerializedDictionary("포지션 번호", "배치 위치")]
+    private SerializedDictionary<int, GameObject> playerPosition = new SerializedDictionary<int, GameObject>();
+    [SerializeField]
+    [SerializedDictionary("포지션 번호", "배치 위치")]
+    private SerializedDictionary<int, GameObject> enemyPosition = new SerializedDictionary<int, GameObject>();
 
     void Awake()
     {
-        background = GetComponent<SpriteRenderer>();
-        battleCamera = GameObject.FindWithTag("BattleCamera").GetComponent<Camera>();
     }
 
     void Start()

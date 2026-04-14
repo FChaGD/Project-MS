@@ -8,7 +8,7 @@ public class CameraSettingController : MonoBehaviour
 
 
     //카메라
-    private Camera selfCamera;
+    private Camera worldCamera;
 
     [Header("줌인, 줌아웃")]
     //카메라 줌인아웃 관련
@@ -39,9 +39,9 @@ public class CameraSettingController : MonoBehaviour
     private float cameraHalfHeight;
     private float cameraHalfWidth;
 
-    private void Awake()
+    void Awake()
     {
-        selfCamera = GetComponent<Camera>();
+
     }
 
     void Start()
@@ -59,6 +59,7 @@ public class CameraSettingController : MonoBehaviour
     public void Init(CameraSettings cameraSettings)
     {
         _cameraSettings = cameraSettings;
+        worldCamera = _cameraSettings.worldCamera.GetComponent<Camera>();
     }
 
     //세계의 경계 받아오기
@@ -87,8 +88,8 @@ public class CameraSettingController : MonoBehaviour
     //카메라 폭 넓이 체크
     public void CameraSizeCheck()
     {
-        cameraHalfHeight = selfCamera.orthographicSize;
-        cameraHalfWidth = cameraHalfHeight * selfCamera.aspect;
+        cameraHalfHeight = worldCamera.orthographicSize;
+        cameraHalfWidth = cameraHalfHeight * worldCamera.aspect;
 
         _cameraSettings.cameraHalfHeight = cameraHalfHeight;
         _cameraSettings.cameraHalfWidth = cameraHalfWidth;
