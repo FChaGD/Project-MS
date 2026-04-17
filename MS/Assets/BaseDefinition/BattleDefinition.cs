@@ -1,5 +1,6 @@
 using System;
-using UnityEngine;
+using System.Collections.Generic;
+using CharacterDefinition;
 
 namespace BattleDefinition
 {
@@ -8,7 +9,16 @@ namespace BattleDefinition
     public class BattleContainer
     {
         public int round;
+        public List<PlayableCharacter> heroList;
     }
+
+
+
+    public interface IBattleFunc
+    {
+        void BattleSetting();
+    }
+
 
 
     #region 전투 트리거 이벤트
