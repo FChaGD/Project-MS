@@ -1,3 +1,4 @@
+using BattleDefinition;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ public class SystemModeChanger : MonoBehaviour
     private IInputFunc inputController;
     private IUIFunc uiController;
     private ICameraFunc cameraController;
+    private IBattleFunc battleController;
 
 
     #endregion
@@ -28,17 +30,17 @@ public class SystemModeChanger : MonoBehaviour
 
     IEnumerator Start()
     {
-        yield return new WaitUntil(() => inputController != null && uiController != null && cameraController != null);
+        yield return new WaitUntil(() => inputController != null && uiController != null && cameraController != null && battleController != null);
 
         //모드 맵핑 구성
         systemInfoContainer.modeFactory = new Dictionary<Type, BaseGameMode>
         {
-            { typeof(WorldMode),  new WorldMode(inputController, uiController, cameraController) },
-            { typeof(BattleMode), new BattleMode(inputController, uiController, cameraController) },
-            { typeof(CivilMode), new CivilMode(inputController, uiController, cameraController) },
-            { typeof(SystemMode), new SystemMode(inputController, uiController, cameraController) },
-            { typeof(DialogMode), new DialogMode(inputController, uiController, cameraController) },
-            { typeof(PauseMode),  new PauseMode(inputController, uiController, cameraController) },
+            { typeof(WorldMode),  new WorldMode(inputController, uiController, cameraController, battleController) },
+            { typeof(BattleMode), new BattleMode(inputController, uiController, cameraController, battleController) },
+            { typeof(CivilMode), new CivilMode(inputController, uiController, cameraController, battleController) },
+            { typeof(SystemMode), new SystemMode(inputController, uiController, cameraController, battleController) },
+            { typeof(DialogMode), new DialogMode(inputController, uiController, cameraController, battleController) },
+            { typeof(PauseMode),  new PauseMode(inputController, uiController, cameraController, battleController) },
         };
 
 
@@ -49,12 +51,13 @@ public class SystemModeChanger : MonoBehaviour
 
     }
 
-    public void Init(IInputFunc input, IUIFunc ui, ICameraFunc camera, SystemInfoContainer container)
+    public void Init(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle, SystemInfoContainer container)
     {
         inputController = input;
         uiController = ui;
         cameraController = camera;
         systemInfoContainer = container;
+        battleController = battle;
         Debug.Log("초기화 성공");
     }
 

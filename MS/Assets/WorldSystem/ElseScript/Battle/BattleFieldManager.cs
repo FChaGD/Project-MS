@@ -35,6 +35,7 @@ public class BattleFieldManager : MonoBehaviour
 
     public void SetFieldSize()
     {
+#warning [배틀] 해상도 변경시 크기조절하는 함수 실행 이벤트 등록 필요
         float spritex = background.sprite.bounds.size.x;
         float spritey = background.sprite.bounds.size.y;
 

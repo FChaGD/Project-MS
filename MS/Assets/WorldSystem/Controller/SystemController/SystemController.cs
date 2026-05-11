@@ -1,3 +1,4 @@
+using BattleDefinition;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     private IInputFunc inputController;
     private IUIFunc uiController;
     private ICameraFunc cameraController;
+    private IBattleFunc battleController;
 
     // 하위 컴포넌트
     private SystemModeChanger modeChanger;
@@ -33,15 +35,15 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     //매니지 매니저가 의존성 할당해줄 때까지 기다리는 코루틴
     private IEnumerator ManageWaiter()
     {
-        yield return new WaitUntil(() => inputController != null && uiController != null && cameraController != null);
+        yield return new WaitUntil(() => inputController != null && uiController != null && cameraController != null && battleController != null);
 
         //의존성 할당 이후 하위 컴포넌트 초기화
         modeChanger = GetComponent<SystemModeChanger>();
         if (modeChanger != null)
         {
 
-            Debug.Log($"Awake inputController: {inputController != null}, uiController: {uiController != null}, cameraController: {cameraController != null}");
-            modeChanger.Init(inputController, uiController, cameraController, systemInfoContainer);
+            Debug.Log($"Awake inputController: {inputController != null}, uiController: {uiController != null}, cameraController: {cameraController != null}, battleController: {battleController != null}");
+            modeChanger.Init(inputController, uiController, cameraController, battleController, systemInfoContainer);
         }
     }
 
@@ -64,6 +66,11 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     {
             Debug.Log($"CameraControlSetter called with cameracontrol: {cameracontrol}");
         cameraController = cameracontrol;
+    }
+
+    public override void BattleControlSetter(IBattleFunc battlecontrol)
+    {
+        battleController = battlecontrol;
     }
     #endregion
 

@@ -41,7 +41,8 @@ public class BattleController : IManageSetterFunc, IBattleFunc
     /// </summary>
     public void BattleSetting()
     {
-        BattleReset();
+        //BattleReset();
+
 
     }
 
