@@ -1,8 +1,5 @@
 using UnityEngine;
-using CharacterDefinition;
 using SystemDefinition;
-using System.Collections.Generic;
-using ItemDefinition;
 using FieldDefinition;
 using System;
 

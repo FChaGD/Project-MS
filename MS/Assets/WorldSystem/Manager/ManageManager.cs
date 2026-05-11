@@ -44,6 +44,7 @@ public class ManageManager : MonoBehaviour
         SetMovementBinder();
         SetCameraBinder();
         SetUIBinder();
+        SetBattleBinder();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -105,6 +106,11 @@ public class ManageManager : MonoBehaviour
         partyManager.MoveControlSetter(movementController);
 
         uiController.MoveControlSetter(movementController);
+    }
+
+    private void SetBattleBinder()
+    {
+        systemController.BattleControlSetter(battleController);
     }
 
     private IEnumerator Destroyer()

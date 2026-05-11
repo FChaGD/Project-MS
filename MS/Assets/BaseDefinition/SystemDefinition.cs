@@ -1,13 +1,16 @@
+using BattleDefinition;
+using CharacterDefinition;
 using FieldDefinition;
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.XR.OpenVR;
 using UnityEngine;
 
 namespace SystemDefinition
 {
 
+
+    #region 매니저 컨트롤러 정보 컨테이너 정의
     [System.Serializable]
     public class CameraSettings
     {
@@ -48,6 +51,8 @@ namespace SystemDefinition
         //모드 전환 딕셔너리
         public Dictionary<Type, BaseGameMode> modeFactory;
     }
+    #endregion
+
 
     #region 게임 시스템 모드
     //게임 시스템의 상태
@@ -59,12 +64,14 @@ namespace SystemDefinition
         protected IInputFunc inputController;
         protected IUIFunc uiController;
         protected ICameraFunc cameraController;
+        protected IBattleFunc battleController;
 
-        public BaseGameMode(IInputFunc input, IUIFunc ui, ICameraFunc camera)
+        public BaseGameMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle)
         {
             inputController = input;
             uiController = ui;
             cameraController = camera;
+            battleController = battle;
         }
 
         public abstract void SetUp();
@@ -75,7 +82,7 @@ namespace SystemDefinition
     //다른 시스템 위에 올라갈 수 없는 변경해야하는 기준점
     public abstract class FloorMode : BaseGameMode
     {
-        public FloorMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public FloorMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -84,7 +91,7 @@ namespace SystemDefinition
     //다른 시스템위에 올라갈 수 있는 게임 모드
     public abstract class CoverableMode : BaseGameMode
     {
-        public CoverableMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public CoverableMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -93,7 +100,7 @@ namespace SystemDefinition
     //변경 시 바로 바뀌는 게임 모드
     public abstract class ChangableMode : CoverableMode
     {
-        public ChangableMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public ChangableMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -102,7 +109,7 @@ namespace SystemDefinition
     //더이상 게임 모드가 올라갈 수 없는 마무리 게임 모드
     public abstract class EndPointMode : CoverableMode
     {
-        public EndPointMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public EndPointMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -115,7 +122,7 @@ namespace SystemDefinition
     //월드 모드
     public class WorldMode : FloorMode
     {
-        public WorldMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public WorldMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -134,7 +141,7 @@ namespace SystemDefinition
     //마을, 거점 등 인물 상태
     public class CivilMode : FloorMode
     {
-        public CivilMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public CivilMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -156,7 +163,7 @@ namespace SystemDefinition
     //전투 모드
     public class BattleMode : ChangableMode
     {
-        public BattleMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public BattleMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -175,7 +182,7 @@ namespace SystemDefinition
     //화면 가득 채운 UI 상태
     public class SystemMode : ChangableMode
     {
-        public SystemMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public SystemMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -193,7 +200,7 @@ namespace SystemDefinition
     //대화창 상태
     public class DialogMode : ChangableMode
     {
-        public DialogMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public DialogMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -213,7 +220,7 @@ namespace SystemDefinition
     //게임 일시 정지
     public class PauseMode : EndPointMode
     {
-        public PauseMode(IInputFunc input, IUIFunc ui, ICameraFunc camera) : base(input, ui, camera)
+        public PauseMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
         {
 
         }
@@ -285,11 +292,6 @@ namespace SystemDefinition
 
     }
 
-    public interface IBattleFunc
-    {
-
-    }
-
     #endregion
 
 #region 매니저, 컨트롤러간 연결용 클래스
@@ -335,6 +337,11 @@ namespace SystemDefinition
             return;
         }
 
+        public virtual void BattleControlSetter(IBattleFunc battlecontrol)
+        {
+            return;
+        }
+
     }
     #endregion
 
@@ -371,7 +378,7 @@ namespace SystemDefinition
         }
     }
 
-    //기능 UI
+    //Grid 타일 UI
     public enum GridUIType
     {
         None = 0,

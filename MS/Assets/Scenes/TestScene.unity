@@ -2485,7 +2485,7 @@ GameObject:
   - component: {fileID: 694039927}
   - component: {fileID: 694039926}
   - component: {fileID: 694039925}
-  - component: {fileID: 694039924}
+  - component: {fileID: 694039928}
   m_Layer: 0
   m_Name: BattleController
   m_TagString: Untagged
@@ -2493,18 +2493,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &694039924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 694039923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac87e049d9c2ac84fae17fbfad15a37e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BattleEventGenerator
 --- !u!114 &694039925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2531,6 +2519,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BattleController
   _battleContainer:
     round: 0
+    heroList:
+    - id: 0
+      curhp: 100
+      curmp: 50
+      curdp: 10
+      loyalty: 3
+      dependency: 3
+      relationship: 3
+      battlePosition: 0
+      curSanity: 20
+      curEnergy: 50
+    - id: 1
+      curhp: 150
+      curmp: 100
+      curdp: 50
+      loyalty: 0
+      dependency: 0
+      relationship: 0
+      battlePosition: 0
+      curSanity: 0
+      curEnergy: 0
+    - id: 2
+      curhp: 200
+      curmp: 50
+      curdp: 300
+      loyalty: 0
+      dependency: 0
+      relationship: 0
+      battlePosition: 0
+      curSanity: 0
+      curEnergy: 0
+    - id: 3
+      curhp: 40
+      curmp: 500
+      curdp: 350
+      loyalty: 0
+      dependency: 0
+      relationship: 0
+      battlePosition: 0
+      curSanity: 0
+      curEnergy: 0
+  battleFieldManager: {fileID: 1952539784}
 --- !u!4 &694039927
 Transform:
   m_ObjectHideFlags: 0
@@ -2546,6 +2576,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &694039928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694039923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fbe4331871df4c47a88823e410c3fc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleSequenceComponent
 --- !u!1001 &709654639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4731,7 +4773,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyManager
   _partyInfo:
-    crewList: []
+    crewList:
+    - id: 0
+      curhp: 0
+      curmp: 0
+      curdp: 0
+      loyalty: 0
+      dependency: 0
+      relationship: 0
+      battlePosition: 0
+      curSanity: 0
+      curEnergy: 0
     equipableItemList: []
     battleuseItemList: []
     gold: 30
