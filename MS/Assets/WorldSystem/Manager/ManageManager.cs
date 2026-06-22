@@ -75,6 +75,7 @@ public class ManageManager : MonoBehaviour
     {
         encounterManager.SystemSetter(systemController);
         uiController.SystemSetter(systemController);
+        inputController.SystemSetter(systemController);
 
         movementController.SystemSetter(systemController);
     }
@@ -90,7 +91,7 @@ public class ManageManager : MonoBehaviour
 
     private void SetInputBinder()
     {
-        systemController.InputSetter(inputController);
+
     }
 
     private void SetCameraBinder()

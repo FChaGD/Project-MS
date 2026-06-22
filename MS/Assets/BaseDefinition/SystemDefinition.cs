@@ -45,31 +45,46 @@ namespace SystemDefinition
     [Serializable]
     public class SystemInfoContainer
     {
-        //게임 모드 리스트
+        /// <summary>
+        /// 실행중인 게임 모드 스택
+        /// </summary>
         public Stack<Type> gameMode;
 
         //모드 전환 딕셔너리
         public Dictionary<Type, BaseGameMode> modeFactory;
+
+        /// <summary>
+        /// 적제된 게임 모드 리스트. 시스템에서 관리하는 게임 모드 클래스 타입을 넣어주세요.
+        /// </summary>
+        public List<Type> modeList;
     }
     #endregion
 
-
     #region 게임 시스템 모드
     //게임 시스템의 상태
+    /*
+    BaseGameMode - 게임 시스템의 모든 상태의 조상 클래스
+    FloorMode - 제일 기초가 되는 기반 게임모드
+    └─WorldMode - 월드 상태
+    └─CivilMode - 마을, 거점 등 인물 상태
+    ChangeableMode - 다른 시스템과 바뀔수 있는 게임모드
+    └─BattleMode - 전투 모드
+    └─SystemMode - 화면 가득 채운 UI 상태
+    └─DialogMode - 대화창 상태
+    EndPointMode - 다른 시스템이 올라갈 수 없는 게임모드
+    └─PauseMode - 게임 일시 정지
+     */
+
     #region 조상 추상 클래스 설정
     //기본 시스템 클래스
     [Serializable]
     public abstract class BaseGameMode
     {
-        protected IInputFunc inputController;
-        protected IUIFunc uiController;
         protected ICameraFunc cameraController;
         protected IBattleFunc battleController;
 
-        public BaseGameMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle)
+        public BaseGameMode(ICameraFunc camera, IBattleFunc battle)
         {
-            inputController = input;
-            uiController = ui;
             cameraController = camera;
             battleController = battle;
         }
@@ -82,7 +97,7 @@ namespace SystemDefinition
     //다른 시스템 위에 올라갈 수 없는 변경해야하는 기준점
     public abstract class FloorMode : BaseGameMode
     {
-        public FloorMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public FloorMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -91,7 +106,7 @@ namespace SystemDefinition
     //다른 시스템위에 올라갈 수 있는 게임 모드
     public abstract class CoverableMode : BaseGameMode
     {
-        public CoverableMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public CoverableMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -100,7 +115,7 @@ namespace SystemDefinition
     //변경 시 바로 바뀌는 게임 모드
     public abstract class ChangableMode : CoverableMode
     {
-        public ChangableMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public ChangableMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -109,7 +124,7 @@ namespace SystemDefinition
     //더이상 게임 모드가 올라갈 수 없는 마무리 게임 모드
     public abstract class EndPointMode : CoverableMode
     {
-        public EndPointMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public EndPointMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -122,7 +137,7 @@ namespace SystemDefinition
     //월드 모드
     public class WorldMode : FloorMode
     {
-        public WorldMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public WorldMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -141,7 +156,7 @@ namespace SystemDefinition
     //마을, 거점 등 인물 상태
     public class CivilMode : FloorMode
     {
-        public CivilMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public CivilMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -163,7 +178,7 @@ namespace SystemDefinition
     //전투 모드
     public class BattleMode : ChangableMode
     {
-        public BattleMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public BattleMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -182,7 +197,7 @@ namespace SystemDefinition
     //화면 가득 채운 UI 상태
     public class SystemMode : ChangableMode
     {
-        public SystemMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public SystemMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -200,7 +215,7 @@ namespace SystemDefinition
     //대화창 상태
     public class DialogMode : ChangableMode
     {
-        public DialogMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public DialogMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -220,7 +235,7 @@ namespace SystemDefinition
     //게임 일시 정지
     public class PauseMode : EndPointMode
     {
-        public PauseMode(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle) : base(input, ui, camera, battle)
+        public PauseMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
         {
 
         }
@@ -276,6 +291,12 @@ namespace SystemDefinition
         /// 현재 게임모드를 한단계 종료 
         /// </summary>
         void RemoveCurGameMode();
+
+        /// <summary>
+        /// 사용중인 게임 모드 리스트 반환
+        /// </summary>
+        /// <returns>Type 배열</returns>
+        Type[] GetModeList();
     }
 
     public interface ICameraFunc
@@ -343,6 +364,154 @@ namespace SystemDefinition
         }
 
     }
+    #endregion
+
+
+    #region 시스템 이벤트 발생 클래스
+    public static class SystemEvent
+    {
+
+        private static readonly Dictionary<Type, Delegate> _systemEvents = new();
+
+        /// <summary>
+        /// 시스템 변경 이벤트 구독 메서드. T는 BaseGameMode 기반 클래스 타입이어야 합니다.
+        /// </summary>
+        /// <typeparam name="T">BaseGameMode 기반 클래스 타입</typeparam>
+        /// <param name="listener">이벤트 리스너</param>
+        /// <exception cref="Exception">T가 BaseGameMode 기반 클래스가 아닌 경우 발생</exception>
+        public static void Subscribe<T>(Action listener)
+        {
+            //게임 모드 클래스인지 검사
+            if (!typeof(BaseGameMode).IsAssignableFrom(typeof(T)))
+            {
+                throw new Exception("Type must be a subclass of BaseGameMode");
+            }
+            //이벤트 딕셔너리에 액션 추가
+            var type = typeof(T);
+            if (_systemEvents.ContainsKey(type))
+                _systemEvents[type] = Delegate.Combine(_systemEvents[type], listener);
+            else
+                _systemEvents[type] = listener;
+        }
+
+        /// <summary>
+        /// 시스템 변경 이벤트 구독 메서드 (Type 직접 전달 버전).
+        /// 런타임에 Type 변수만 있는 경우 사용합니다.
+        /// </summary>
+        /// <param name="type">BaseGameMode 기반 클래스 Type</param>
+        /// <param name="listener">이벤트 리스너</param>
+        public static void Subscribe(Type type, Action listener)
+        {
+            if (!typeof(BaseGameMode).IsAssignableFrom(type))
+            {
+                throw new Exception("Type must be a subclass of BaseGameMode");
+            }
+            if (_systemEvents.ContainsKey(type))
+                _systemEvents[type] = Delegate.Combine(_systemEvents[type], listener);
+            else
+                _systemEvents[type] = listener;
+        }
+
+        /// <summary>
+        /// 시스템 변경 이벤트 구독 해제 메서드. T는 BaseGameMode 기반 클래스 타입이어야 합니다.
+        /// </summary>
+        /// <typeparam name="T">BaseGameMode 기반 클래스 타입</typeparam>
+        /// <param name="listener">이벤트 리스너</param>
+        /// <exception cref="Exception">T가 BaseGameMode 기반 클래스가 아닌 경우 발생</exception>
+        public static void Unsubscribe<T>(Action listener)
+        {
+            //게임 모드 클래스인지 검사
+            if (!typeof(BaseGameMode).IsAssignableFrom(typeof(T)))
+            {
+                throw new Exception("Type must be a subclass of BaseGameMode");
+            }
+            var type = typeof(T);
+            if (_systemEvents.ContainsKey(type))
+            {
+                try
+                {
+                    _systemEvents[type] = Delegate.Remove(_systemEvents[type], listener);
+                    if (_systemEvents[type] == null)
+                        _systemEvents.Remove(type);
+                }
+                catch (InvalidOperationException)
+                {
+                    // 종료/도메인 리로드 등 비정상 상태에서의 안전한 무시
+                    _systemEvents.Remove(type);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 시스템 변경 이벤트 구독 해제 메서드 (Type 직접 전달 버전).
+        /// </summary>
+        /// <param name="type">BaseGameMode 기반 클래스 Type</param>
+        /// <param name="listener">이벤트 리스너</param>
+        public static void Unsubscribe(Type type, Action listener)
+        {
+            if (!typeof(BaseGameMode).IsAssignableFrom(type))
+            {
+                throw new Exception("Type must be a subclass of BaseGameMode");
+            }
+            if (_systemEvents.ContainsKey(type))
+            {
+                try
+                {
+                    _systemEvents[type] = Delegate.Remove(_systemEvents[type], listener);
+                    if (_systemEvents[type] == null)
+                        _systemEvents.Remove(type);
+                }
+                catch (InvalidOperationException)
+                {
+                    // 종료/도메인 리로드 등 비정상 상태에서의 안전한 무시
+                    _systemEvents.Remove(type);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 시스템 변경 발생 메서드. T는 BaseGameMode 기반 클래스 타입이어야 합니다.
+        /// </summary>
+        /// <typeparam name="T">BaseGameMode 기반 클래스 타입</typeparam>
+        /// <param name="eventData">발생시킬 이벤트 데이터</param>
+        /// <exception cref="Exception">T가 BaseGameMode 기반 클래스가 아닌 경우 발생</exception>
+#warning [시스템] 이벤트 발생 시 추가 데이터 전달 매개변수 DataClass eventData 추가 필요
+        public static void Publish<T>()
+        {
+            Debug.Log($"퍼블리싱 이벤트 발생: {typeof(T).Name}");
+            //게임 모드 클래스인지 검사
+            if (!typeof(BaseGameMode).IsAssignableFrom(typeof(T)))
+            {
+                throw new Exception("Type must be a subclass of BaseGameMode");
+            }
+
+            if (_systemEvents.TryGetValue(typeof(T), out var del)) {
+                Debug.Log($"이벤트 구독자 수: {((Action)del)?.GetInvocationList().Length ?? 0}");
+                ((Action)del)?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// 시스템 변경 발생 메서드. T는 BaseGameMode 기반 클래스 타입이어야 합니다. (Type 직접 전달 버전).
+        /// </summary>
+        /// <param name="type">BaseGameMode 기반 클래스 Type</param>
+        /// <exception cref="Exception">T가 BaseGameMode 기반 클래스가 아닌 경우 발생</exception>
+#warning [시스템] 이벤트 발생 시 추가 데이터 전달 매개변수 DataClass eventData 추가 필요
+        public static void Publish(Type type)
+        {
+            Debug.Log($"Publishing event for type: {type.Name}");
+            //게임 모드 클래스인지 검사
+            if (!typeof(BaseGameMode).IsAssignableFrom(type))
+            {
+                throw new Exception("Type must be a subclass of BaseGameMode");
+            }
+
+            if (_systemEvents.TryGetValue(type, out var del))
+                ((Action)del)?.Invoke();
+        }
+    }
+
+
     #endregion
 
     //WorldMode HUD UI 제어 모노비헤이비어 정의
@@ -421,7 +590,6 @@ namespace SystemDefinition
         public TabType tabType;
         public GameObject tabPrefeb;
     }
-
 
 
 }

@@ -77,6 +77,8 @@ namespace DataDefinition
     }
     #endregion
 
+
+
     // 필드 데이터 집합 클래스
     public class FieldData
     {

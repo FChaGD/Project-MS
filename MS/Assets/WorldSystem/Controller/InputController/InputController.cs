@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 
-
+#region Input Action 클래스
 //입력 액션 갱신 규칙
 //1. 맵핑을 새로 정의했다면 Events 클래스 내에서 맵핑을 클래스로 만들 것(Serializable을 붙힐 것)
 //2. 액션 맵 클래스 내부에 public UnityEvent<InputAction.CallbackContext> 변수로 액션을 정의할 것
@@ -60,7 +60,7 @@ public class Events
     public SystemUIEvent SystemUI;
 
 }
-
+#endregion
 
 public class InputController : IManageSetterFunc, IInputFunc
 {
@@ -70,7 +70,7 @@ public class InputController : IManageSetterFunc, IInputFunc
     [SerializeField]
     private InputSystemUIInputModule inputSystemUIInputModule;
 
-    public Events events;
+    public Events inputEvents;
 
     // 자동 바인딩으로 수집된 (액션, 이벤트) 쌍 저장
     private List<(InputAction action, UnityEvent<InputAction.CallbackContext> evt)> boundActions = new();
@@ -79,6 +79,12 @@ public class InputController : IManageSetterFunc, IInputFunc
     private InputActionMap cameraMap;
     private InputActionMap worldInputMap;
     private InputActionMap systemUIMap;
+
+    //외부 매니저 컨트롤러 변수
+    private ISystemFunc systemController;
+
+    //게임 모드 별 액션 맵 활성화/비활성화 맵핑
+    private Dictionary<Type, Action> onActionMap = new();
 
     void Awake()
     {
@@ -95,6 +101,9 @@ public class InputController : IManageSetterFunc, IInputFunc
 #warning [플레이어 입력] 액션 맵의 초기 활성화 로직 작성 필요
 #warning [플레이어 입력] 액션 맵 활성화 로직 구현 필요
 
+        //게임 모드 전환 이벤트 별 액션 맵 활성화/비활성화 맵핑 등록
+        SetModeMap();
+
 
         cameraMap.Enable();
         worldInputMap.Enable();
@@ -104,9 +113,27 @@ public class InputController : IManageSetterFunc, IInputFunc
 
     void OnDestroy()
     {
+        if (!Application.isPlaying) return;
+        else
+        {
+            foreach (Type mode in systemController.GetModeList())
+            {
+                if (onActionMap.TryGetValue(mode, out Action action))
+                {
+                    SystemEvent.Unsubscribe(mode, action);
+                }
+            }
+
+        }
         // 메모리 누수 방지 — 콜백 해제
         AutoUnbind();
     }
+
+    public override void SystemSetter(ISystemFunc system)
+    {
+        systemController = system;
+    }
+
 
     //액션에 이벤트 연결
     private void AutoBind()
@@ -114,7 +141,7 @@ public class InputController : IManageSetterFunc, IInputFunc
         // Events 클래스의 모든 필드 순회 (CameraEvent, WorldEvent ...)
         foreach (var mapField in typeof(Events).GetFields(BindingFlags.Public | BindingFlags.Instance))
         {
-            object mapInstance = mapField.GetValue(events);
+            object mapInstance = mapField.GetValue(inputEvents);
             if (mapInstance == null) continue;
 
             // 필드명에서 액션 맵 이름 추출 ("Camera", "World" ...)
@@ -166,14 +193,79 @@ public class InputController : IManageSetterFunc, IInputFunc
         boundActions.Clear();
     }
 
-    public void EnableMap(string mapName)
+    /// <summary>
+    /// 게임 모드 전환 이벤트 별 액션 맵 활성화/비활성화 맵핑 등록
+    /// </summary>
+    private void SetModeMap()
+    {
+
+        //월드 게임 모드 진입 시 액션 맵 설정
+        SubscribeModeMapEvent<WorldMode>(
+            enableMap: new[] { "World", "Camera", "SystemUI" },
+            disableMap: Array.Empty<string>()
+        );
+
+        //시내 게임 모드 진입 시 액션 맵 설정
+        SubscribeModeMapEvent<CivilMode>(
+            enableMap: new[] { "SystemUI" },
+            disableMap: new[] { "Camera", "World" }
+        );
+
+        //전투 게임 모드 진입 시 액션 맵 설정
+        SubscribeModeMapEvent<BattleMode>(
+            enableMap: new[] { "SystemUI" },
+            disableMap: new[] { "Camera", "World" }
+        );
+
+        //시스템 UI 게임 모드 진입 시 액션 맵 설정
+        SubscribeModeMapEvent<SystemMode>(
+            enableMap: new[] { "SystemUI" },
+            disableMap: new[] { "Camera", "World" }
+        );
+
+        //대화 게임 모드 진입 시 액션 맵 설정
+        SubscribeModeMapEvent<DialogMode>(
+            enableMap: new[] { "SystemUI" },
+            disableMap: new[] { "Camera", "World" }
+        );
+
+        //일시정지 게임 모드 진입 시 액션 맵 설정
+        SubscribeModeMapEvent<PauseMode>(
+            enableMap: new[] { "SystemUI" },
+            disableMap: new[] { "Camera", "World" }
+        );
+
+
+    }
+
+    private void EnableMap(string mapName)
     {
         inputActionAsset.FindActionMap(mapName)?.Enable();
     }
 
-    public void DisableMap(string mapName)
+    private void DisableMap(string mapName)
     {
         inputActionAsset.FindActionMap(mapName)?.Disable();
     }
 
+    private void SubscribeModeMapEvent<T>(String[] enableMap, String[] disableMap)
+    {
+        Action onModeMapChange = null;
+        foreach (var map in enableMap)
+        {
+            var localMap = map; // 명시적 로컬 복사본 (구버전 컴파일러 대비, 가독성 목적)
+            onModeMapChange += () => EnableMap(localMap);
+        }
+        foreach (var map in disableMap)
+        {
+            var localMap = map;
+            onModeMapChange += () => DisableMap(localMap);
+        }
+
+        if (onModeMapChange == null)
+            return; // 등록할 게 없으면 구독하지 않음
+
+        onActionMap.Add(typeof(T), onModeMapChange);
+        SystemEvent.Subscribe<T>(onActionMap[typeof(T)]);
+    }
 }

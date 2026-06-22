@@ -29,11 +29,18 @@ public class BattleController : IManageSetterFunc, IBattleFunc
         battleTurnDeclarer.Init(_battleContainer);
         battleSequenceComponent.Init(_battleContainer);
 
+        SystemEvent.Subscribe<BattleMode>(BattleSetting);
+
     }
 
     void Start()
     {
 
+    }
+
+    void OnDestroy()
+    {
+        SystemEvent.Unsubscribe<BattleMode>(BattleSetting);
     }
 
     /// <summary>
@@ -42,6 +49,8 @@ public class BattleController : IManageSetterFunc, IBattleFunc
     public void BattleSetting()
     {
         //BattleReset();
+        LoadBattleInfo();
+
 
 
     }
@@ -51,6 +60,11 @@ public class BattleController : IManageSetterFunc, IBattleFunc
         _battleContainer.round = 0;
         _battleContainer.heroList.Clear();
 
+    }
+
+    private void LoadBattleInfo()
+    {
+#warning [배틀] 배틀 정보 불러오는 기능 추가 필요
     }
 
 

@@ -1436,7 +1436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InputController
   inputActionAsset: {fileID: -944628639613478452, guid: 40006181802efd7428d63e2e3a37ed8e, type: 3}
   inputSystemUIInputModule: {fileID: 1898082384}
-  events:
+  inputEvents:
     Camera:
       CameraZoom:
         m_PersistentCalls:
@@ -1548,7 +1548,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 922401858}
-            m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+            m_TargetAssemblyTypeName: UIController, Assembly-CSharp
             m_MethodName: PathCheckUIToggle
             m_Mode: 0
             m_Arguments:
@@ -2530,6 +2530,7 @@ MonoBehaviour:
       battlePosition: 0
       curSanity: 20
       curEnergy: 50
+      position: 0
     - id: 1
       curhp: 150
       curmp: 100
@@ -2540,6 +2541,7 @@ MonoBehaviour:
       battlePosition: 0
       curSanity: 0
       curEnergy: 0
+      position: 0
     - id: 2
       curhp: 200
       curmp: 50
@@ -2550,6 +2552,7 @@ MonoBehaviour:
       battlePosition: 0
       curSanity: 0
       curEnergy: 0
+      position: 0
     - id: 3
       curhp: 40
       curmp: 500
@@ -2560,6 +2563,7 @@ MonoBehaviour:
       battlePosition: 0
       curSanity: 0
       curEnergy: 0
+      position: 0
   battleFieldManager: {fileID: 1952539784}
 --- !u!4 &694039927
 Transform:
@@ -4784,6 +4788,7 @@ MonoBehaviour:
       battlePosition: 0
       curSanity: 0
       curEnergy: 0
+      position: 0
     equipableItemList: []
     battleuseItemList: []
     gold: 30

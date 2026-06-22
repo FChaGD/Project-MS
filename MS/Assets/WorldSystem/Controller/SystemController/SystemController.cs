@@ -14,7 +14,6 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     private SystemInfoContainer systemInfoContainer;
 
     //외부 매니저 컨트롤러 변수
-    private IInputFunc inputController;
     private IUIFunc uiController;
     private ICameraFunc cameraController;
     private IBattleFunc battleController;
@@ -27,6 +26,16 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     {
         systemInfoContainer.gameMode = new Stack<Type>();
         systemInfoContainer.modeFactory = new Dictionary<Type, BaseGameMode>();
+        systemInfoContainer.modeList = new List<Type>();
+
+        // 게임 모드 리스트 초기화
+        systemInfoContainer.modeList.Add(typeof(WorldMode));
+        systemInfoContainer.modeList.Add(typeof(CivilMode));
+        systemInfoContainer.modeList.Add(typeof(BattleMode));
+        systemInfoContainer.modeList.Add(typeof(SystemMode));
+        systemInfoContainer.modeList.Add(typeof(DialogMode));
+        systemInfoContainer.modeList.Add(typeof(PauseMode));
+
 
         StartCoroutine(ManageWaiter());
 
@@ -35,36 +44,26 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     //매니지 매니저가 의존성 할당해줄 때까지 기다리는 코루틴
     private IEnumerator ManageWaiter()
     {
-        yield return new WaitUntil(() => inputController != null && uiController != null && cameraController != null && battleController != null);
+        yield return new WaitUntil(() => cameraController != null && battleController != null);
 
         //의존성 할당 이후 하위 컴포넌트 초기화
         modeChanger = GetComponent<SystemModeChanger>();
         if (modeChanger != null)
         {
-
-            Debug.Log($"Awake inputController: {inputController != null}, uiController: {uiController != null}, cameraController: {cameraController != null}, battleController: {battleController != null}");
-            modeChanger.Init(inputController, uiController, cameraController, battleController, systemInfoContainer);
+            modeChanger.Init(cameraController, battleController, systemInfoContainer);
         }
     }
 
 
     #region 외부 매니저 컨트롤러 받아오기
 
-    public override void InputSetter(IInputFunc input)
-    {
-        Debug.Log($"InputSetter called with input: {input}");
-        inputController = input;
-    }
-
     public override void UISetter(IUIFunc ui)
     {
-            Debug.Log($"UISetter called with ui: {ui}");
         uiController = ui;
     }
 
     public override void CameraControlSetter(ICameraFunc cameracontrol)
     {
-            Debug.Log($"CameraControlSetter called with cameracontrol: {cameracontrol}");
         cameraController = cameracontrol;
     }
 
@@ -90,6 +89,12 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     public void RemoveCurGameMode()
     {
         modeChanger.RemoveCurGameMode();
+    }
+    
+
+    public Type[] GetModeList()
+    {
+        return systemInfoContainer.modeList.ToArray();
     }
 
 

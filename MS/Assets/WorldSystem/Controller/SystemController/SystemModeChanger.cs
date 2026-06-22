@@ -13,8 +13,6 @@ public class SystemModeChanger : MonoBehaviour
     private SystemInfoContainer systemInfoContainer;
 
     //외부 매니저 컨트롤러 변수
-    private IInputFunc inputController;
-    private IUIFunc uiController;
     private ICameraFunc cameraController;
     private IBattleFunc battleController;
 
@@ -30,31 +28,30 @@ public class SystemModeChanger : MonoBehaviour
 
     IEnumerator Start()
     {
-        yield return new WaitUntil(() => inputController != null && uiController != null && cameraController != null && battleController != null);
+        yield return new WaitUntil(() => cameraController != null && battleController != null);
 
         //모드 맵핑 구성
         systemInfoContainer.modeFactory = new Dictionary<Type, BaseGameMode>
         {
-            { typeof(WorldMode),  new WorldMode(inputController, uiController, cameraController, battleController) },
-            { typeof(BattleMode), new BattleMode(inputController, uiController, cameraController, battleController) },
-            { typeof(CivilMode), new CivilMode(inputController, uiController, cameraController, battleController) },
-            { typeof(SystemMode), new SystemMode(inputController, uiController, cameraController, battleController) },
-            { typeof(DialogMode), new DialogMode(inputController, uiController, cameraController, battleController) },
-            { typeof(PauseMode),  new PauseMode(inputController, uiController, cameraController, battleController) },
+            { typeof(WorldMode),  new WorldMode(cameraController, battleController) },
+            { typeof(BattleMode), new BattleMode(cameraController, battleController) },
+            { typeof(CivilMode), new CivilMode(cameraController, battleController) },
+            { typeof(SystemMode), new SystemMode(cameraController, battleController) },
+            { typeof(DialogMode), new DialogMode(cameraController, battleController) },
+            { typeof(PauseMode),  new PauseMode(cameraController, battleController) },
         };
 
 
 #warning[시스템] 저장된 게임모드 불러오기 기능 추가 필요
         systemInfoContainer.gameMode.Push(typeof(WorldMode));
         systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Peek()].SetUp();
+        SystemEvent.Publish<WorldMode>();
 
 
     }
 
-    public void Init(IInputFunc input, IUIFunc ui, ICameraFunc camera, IBattleFunc battle, SystemInfoContainer container)
+    public void Init(ICameraFunc camera, IBattleFunc battle, SystemInfoContainer container)
     {
-        inputController = input;
-        uiController = ui;
         cameraController = camera;
         systemInfoContainer = container;
         battleController = battle;

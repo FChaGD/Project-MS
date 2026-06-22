@@ -18,15 +18,18 @@ public class UIController : IManageSetterFunc, IUIFunc
     private SystemUISetter systemUISetter;
     private PauseUISetter pauseUISetter;
 
-
+    //게임 모드 별 액션 맵 활성화/비활성화 맵핑
+    private Dictionary<Type, Action> onActionUI = new();
 
 
     //외부 컨트롤러 매니저 변수
     private IGridFunc gridManager;
     private IPartyFunc partyManager;
-    private ISystemFunc systemManager;
+    private ISystemFunc systemController;
 
     private IMovementFuc movementController;
+
+
 
     void Awake()
     {
@@ -47,6 +50,9 @@ public class UIController : IManageSetterFunc, IUIFunc
             {typeof(SystemMode),  systemUISetter},
             {typeof(PauseMode),  pauseUISetter}
         };
+
+        SetModeUI();
+        
     }
 
 
@@ -63,6 +69,19 @@ public class UIController : IManageSetterFunc, IUIFunc
 
     void OnDestroy()
     {
+
+        if (!Application.isPlaying) return;
+        else
+        {
+            foreach (Type mode in systemController.GetModeList())
+            {
+                if (onActionUI.TryGetValue(mode, out Action action))
+                {
+                    SystemEvent.Unsubscribe(mode, action);
+                }
+            }
+        }
+
         //WorldUI HUD 업데이트 함수 해제
         partyManager.UnBindUpdateSet(worldUISetter.UpdateFood, worldUISetter.UpdateGold);
         movementController.UnBindUpdateSet(worldUISetter.UpdateSpeed);
@@ -87,7 +106,7 @@ public class UIController : IManageSetterFunc, IUIFunc
 
     public override void SystemSetter(ISystemFunc system)
     {
-        systemManager = system;
+        systemController = system;
     }
     #endregion
 
@@ -160,16 +179,16 @@ public class UIController : IManageSetterFunc, IUIFunc
     {
 
         //만약 현재 게임 모드가 시스템 게임모드라면
-        if (systemManager.GetGameMode() is SystemMode)
+        if (systemController.GetGameMode() is SystemMode)
         {
 
-            Debug.Log($"인벤토리 입력 시 탭 타입 : {systemManager.GetGameMode()}");
+            Debug.Log($"인벤토리 입력 시 탭 타입 : {systemController.GetGameMode()}");
             Debug.Log($"인벤토리 입력 시 탭 타입 : {systemUISetter.GetCurTabType()}, {typeof(T).Name}, {systemUISetter.GetCurTabType() == typeof(T)}");
             //만약 현재 탭 포커스가 전환 대상 탭모드라면
             if (systemUISetter.GetCurTabType() == typeof(T))
             {
                 systemUISetter.UIOff();
-                systemManager.RemoveCurGameMode();
+                systemController.RemoveCurGameMode();
             }
             else
             {
@@ -182,10 +201,67 @@ public class UIController : IManageSetterFunc, IUIFunc
             //현재 게임 모드가 시스템 모드가 아니라면
             systemUISetter.TabFocus(typeof(T));
             systemUISetter.UIOn();
-            systemManager.SetGameMode(typeof(SystemMode));
+            systemController.SetGameMode(typeof(SystemMode));
         }
     }
 
+    /// <summary>
+    /// 게임 모드 이벤트와 ui onOff함수를 연결하는 함수
+    /// </summary>
+    private void SetModeUI()
+    {
+        
+        SubscribeModeUIEvent<WorldMode>(
+            onUI: new Type[] { typeof(WorldMode) },
+            offUI: new Type[] { typeof(CivilMode), typeof(BattleMode), typeof(SystemMode), typeof(DialogMode), typeof(PauseMode) }
+        );
 
+        SubscribeModeUIEvent<CivilMode>(
+            onUI: new Type[] { typeof(CivilMode) },
+            offUI: new Type[] { typeof(WorldMode), typeof(BattleMode), typeof(SystemMode), typeof(DialogMode), typeof(PauseMode) }
+        );
+
+        SubscribeModeUIEvent<BattleMode>(
+            onUI: new Type[] { typeof(BattleMode) },
+            offUI: new Type[] { typeof(WorldMode), typeof(CivilMode), typeof(SystemMode), typeof(DialogMode), typeof(PauseMode) }
+        );
+
+        SubscribeModeUIEvent<SystemMode>(
+            onUI: new Type[] { typeof(SystemMode) },
+            offUI: new Type[] { typeof(PauseMode) }
+        );
+
+        SubscribeModeUIEvent<DialogMode>(
+            onUI: new Type[] { typeof(DialogMode) },
+            offUI: new Type[] { typeof(WorldMode), typeof(CivilMode), typeof(BattleMode), typeof(SystemMode), typeof(PauseMode) }
+        );
+
+        SubscribeModeUIEvent<PauseMode>(
+            onUI: new Type[] { typeof(PauseMode) },
+            offUI: Array.Empty<Type>()
+        );
+
+    }
+
+    private void SubscribeModeUIEvent<T>(Type[] onUI, Type[] offUI)
+    {
+
+        Action onModeUIChange = null;
+        foreach (var type in onUI)
+        {
+            var localType = type; // 명시적 로컬 복사본 (구버전 컴파일러 대비, 가독성 목적)
+            onModeUIChange += () => uiControlList[localType].UIOn();
+        }
+        foreach (var type in offUI)
+        {
+            var localType = type;
+            onModeUIChange += () => uiControlList[localType].UIOff();
+        }
+
+        if (onModeUIChange == null)
+            return; // 등록할 게 없으면 구독하지 않음
+        onActionUI.Add(typeof(T), onModeUIChange);
+        SystemEvent.Subscribe<T>(onActionUI[typeof(T)]);
+    }
 
 }

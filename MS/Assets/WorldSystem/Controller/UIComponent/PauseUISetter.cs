@@ -10,11 +10,11 @@ public class PauseUISetter : BaseUIControl
     }
     public override void UIOff()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void UIOn()
     {
-        throw new System.NotImplementedException();
+        
     }
 }
