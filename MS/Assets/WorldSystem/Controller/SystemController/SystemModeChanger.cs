@@ -44,7 +44,6 @@ public class SystemModeChanger : MonoBehaviour
 
 #warning[시스템] 저장된 게임모드 불러오기 기능 추가 필요
         systemInfoContainer.gameMode.Push(typeof(WorldMode));
-        systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Peek()].SetUp();
         SystemEvent.Publish<WorldMode>();
 
 
@@ -55,7 +54,6 @@ public class SystemModeChanger : MonoBehaviour
         cameraController = camera;
         systemInfoContainer = container;
         battleController = battle;
-        Debug.Log("초기화 성공");
     }
 
     #endregion
@@ -76,8 +74,7 @@ public class SystemModeChanger : MonoBehaviour
         if (systemInfoContainer.gameMode.Peek() == request)
         {
             //이미 최상단이 해당 모드일 경우 종료
-            systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Pop()].EndSet();
-            systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Peek()].SetUp();
+            systemInfoContainer.gameMode.Pop();
         }
 
         //변환 요청 모드가 타 모드 위에 얹기 가능한 모드일 경우
@@ -98,13 +95,13 @@ public class SystemModeChanger : MonoBehaviour
             //요청한 모드가 기반 모드일 경우
             while (systemInfoContainer.gameMode.Count > 0 && systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Peek()] is not FloorMode)
             {
-                systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Pop()].EndSet();
+                systemInfoContainer.gameMode.Pop();
             }
             if (systemInfoContainer.gameMode.Count > 0)
-                systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Pop()].EndSet();
+                systemInfoContainer.gameMode.Pop();
 
             systemInfoContainer.gameMode.Push(requestMode.GetType());
-            systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Peek()].SetUp();
+            SystemEvent.Publish(systemInfoContainer.gameMode.Peek());
         }
 
     }
@@ -112,8 +109,8 @@ public class SystemModeChanger : MonoBehaviour
     //현재 게임모드 종료
     public void RemoveCurGameMode()
     {
-        systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Pop()].EndSet();
-        systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Peek()].SetUp();
+        systemInfoContainer.gameMode.Pop();
+        systemInfoContainer.gameMode.Peek();
     }
 
 
@@ -140,15 +137,14 @@ public class SystemModeChanger : MonoBehaviour
                 systemInfoContainer.gameMode.Push(tmp.GetType());
             }
             systemInfoContainer.gameMode.Push(request);
-            requestMode.SetUp();
+            SystemEvent.Publish(requestMode.GetType());
 
         }
         else
         {
             //스택 내에 없을때
-            systemInfoContainer.modeFactory[systemInfoContainer.gameMode.Peek()].EndSet();
             systemInfoContainer.gameMode.Push(request);
-            requestMode.SetUp();
+            SystemEvent.Publish(requestMode.GetType());
         }
     }
     #endregion
