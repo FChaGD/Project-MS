@@ -14,7 +14,6 @@ public class SystemModeChanger : MonoBehaviour
 
     //외부 매니저 컨트롤러 변수
     private ICameraFunc cameraController;
-    private IBattleFunc battleController;
 
 
     #endregion
@@ -28,17 +27,17 @@ public class SystemModeChanger : MonoBehaviour
 
     IEnumerator Start()
     {
-        yield return new WaitUntil(() => cameraController != null && battleController != null);
+        yield return new WaitUntil(() => cameraController != null);
 
         //모드 맵핑 구성
         systemInfoContainer.modeFactory = new Dictionary<Type, BaseGameMode>
         {
-            { typeof(WorldMode),  new WorldMode(cameraController, battleController) },
-            { typeof(BattleMode), new BattleMode(cameraController, battleController) },
-            { typeof(CivilMode), new CivilMode(cameraController, battleController) },
-            { typeof(SystemMode), new SystemMode(cameraController, battleController) },
-            { typeof(DialogMode), new DialogMode(cameraController, battleController) },
-            { typeof(PauseMode),  new PauseMode(cameraController, battleController) },
+            { typeof(WorldMode),  new WorldMode(cameraController) },
+            { typeof(BattleMode), new BattleMode(cameraController) },
+            { typeof(CivilMode), new CivilMode(cameraController) },
+            { typeof(SystemMode), new SystemMode(cameraController) },
+            { typeof(DialogMode), new DialogMode(cameraController) },
+            { typeof(PauseMode),  new PauseMode(cameraController) },
         };
 
 
@@ -49,11 +48,10 @@ public class SystemModeChanger : MonoBehaviour
 
     }
 
-    public void Init(ICameraFunc camera, IBattleFunc battle, SystemInfoContainer container)
+    public void Init(ICameraFunc camera, SystemInfoContainer container)
     {
         cameraController = camera;
         systemInfoContainer = container;
-        battleController = battle;
     }
 
     #endregion

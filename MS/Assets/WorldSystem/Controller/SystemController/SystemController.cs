@@ -44,13 +44,13 @@ public class SystemController : IManageSetterFunc, ISystemFunc
     //매니지 매니저가 의존성 할당해줄 때까지 기다리는 코루틴
     private IEnumerator ManageWaiter()
     {
-        yield return new WaitUntil(() => cameraController != null && battleController != null);
+        yield return new WaitUntil(() => cameraController != null);
 
         //의존성 할당 이후 하위 컴포넌트 초기화
         modeChanger = GetComponent<SystemModeChanger>();
         if (modeChanger != null)
         {
-            modeChanger.Init(cameraController, battleController, systemInfoContainer);
+            modeChanger.Init(cameraController, systemInfoContainer);
         }
     }
 

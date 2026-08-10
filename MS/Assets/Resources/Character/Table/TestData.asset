@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: TestData
+  m_EditorClassIdentifier: Assembly-CSharp:CharacterDefinition:CharacterDataTable
+  _id: 0
+  characterData:
+    hpMax: 50
+    attack_Point: 0
+    mpMax: 50
+    dpMax: 0
+    battleSpeed: 0
+    baseAttackSpeed: 0
+    sanityMax: 0
+    energyMax: 0
+    baseRaceType: 0
+    baseRaceIsolation: 0
+    baseContry: {fileID: 0}
+    basePatriotism: 0
+    baseGroup: {fileID: 0}
+    groupLoyalty: 0
+    baseReligion: {fileID: 0}
+    baseFath: 0
+    baseSystem: 0
+    politicTendency: 0

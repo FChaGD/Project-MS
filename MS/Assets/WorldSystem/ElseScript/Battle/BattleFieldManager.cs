@@ -3,7 +3,7 @@ using CharacterDefinition;
 using NUnit.Framework;
 using UnityEngine;
 
-//전투 시작시 배경화면을 해상도에 맞춰 크기를 키우는 스크립트
+//전투 시작시 배경화면을 해상도에 맞춰 크기를 키우는 클래스
 public class BattleFieldManager : MonoBehaviour
 {
     [Header("배경화면과 카메라")]
@@ -19,6 +19,9 @@ public class BattleFieldManager : MonoBehaviour
     [SerializeField]
     [SerializedDictionary("포지션 번호", "배치 위치")]
     private SerializedDictionary<int, GameObject> enemyPosition = new SerializedDictionary<int, GameObject>();
+
+    public Camera testcam;
+    public SpriteRenderer sr;
 
     void Awake()
     {
@@ -48,7 +51,7 @@ public class BattleFieldManager : MonoBehaviour
         
         transform.localScale = new Vector3(screenX / spritex, screenY / spritey, transform.localScale.z);
 
-        Debug.Log($"X 스케일 : {screenX / spritex}, Y 스케일 : {screenY / spritey}, 현재 스케일 {transform.localScale}");
+
     }
 
     //전장 세팅
@@ -56,14 +59,20 @@ public class BattleFieldManager : MonoBehaviour
     /// 전장 배경화면, 아군캐릭터 배치, 적군 캐릭터를 배치합니다.
     /// </summary>
     /// <param name="heroList">전장에 배치할 아군 캐릭터, PlayableCharacter 배열이여야 합니다.</param>
-    public void SetBattleField(PlayableCharacter[] heroList)
+    /// <param name="enemyList">전장에 배치할 적군 캐릭터, EnemyCharacter 배열이여야 합니다.</param>
+    public void SetBattleField(PlayableCharacter[] heroList, EnemyCharacter[] enemyList)
     {
         SetBackgroundImage();
         CharacterAllClear();
         foreach (var hero in heroList)
         {
-            SetPlayerCharacterOnBattleField(hero);
+            SetCharacterOnBattleField(hero);
         }
+        foreach (var enemy in enemyList)
+        {
+            SetCharacterOnBattleField(enemy);
+        }
+
     }
 
     private void SetBackgroundImage()
@@ -85,8 +94,17 @@ public class BattleFieldManager : MonoBehaviour
         }
     }
 
-    private void SetPlayerCharacterOnBattleField(PlayableCharacter hero)
+    private void SetCharacterOnBattleField(CharacterBase character)
     {
-        playerPosition[hero.position].SetActive(true);
+        if (character is PlayableCharacter)
+        {
+            playerPosition[character.battlePosition].SetActive(true);
+            playerPosition[character.battlePosition].GetComponent<BattleCharacterContainer>().SetCharacterInfo(character);
+        }
+        else if (character is EnemyCharacter)
+        {
+            enemyPosition[character.battlePosition].SetActive(true);
+            enemyPosition[character.battlePosition].GetComponent<BattleCharacterContainer>().SetCharacterInfo(character);
+        }
     }
 }

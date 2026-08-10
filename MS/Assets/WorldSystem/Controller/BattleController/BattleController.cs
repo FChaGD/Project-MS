@@ -16,20 +16,25 @@ public class BattleController : IManageSetterFunc, IBattleFunc
     private BattleFieldManager battleFieldManager;
 
     //하위 컴포넌트 변수
-    private BattleTurnDeclarer battleTurnDeclarer;
+    private BattleFieldSetter battleFieldSetter;
     private BattleSequenceComponent battleSequenceComponent;
+    private BattleActOrderer battleActOrderer;
 
     void Awake()
     {
         //하위 컴포넌트 받아오기
-        battleTurnDeclarer = GetComponent<BattleTurnDeclarer>();
+        battleFieldSetter = GetComponent<BattleFieldSetter>();
         battleSequenceComponent = GetComponent<BattleSequenceComponent>();
+        battleActOrderer = GetComponent<BattleActOrderer>();
+
+        //컨테이너 정보 초기화
+        _battleContainer.battleFieldManager = battleFieldManager;
 
         //컨테이너 등록
-        battleTurnDeclarer.Init(_battleContainer);
+        battleFieldSetter.Init(_battleContainer);
         battleSequenceComponent.Init(_battleContainer);
+        battleActOrderer.Init(_battleContainer);
 
-        SystemEvent.Subscribe<BattleMode>(BattleSetting);
 
     }
 
@@ -38,34 +43,13 @@ public class BattleController : IManageSetterFunc, IBattleFunc
 
     }
 
-    void OnDestroy()
-    {
-        SystemEvent.Unsubscribe<BattleMode>(BattleSetting);
-    }
-
     /// <summary>
     /// 배틀 컨트롤 정보 컨테이너를 초기화하고, 관련 정보를 받아오는 함수
     /// </summary>
-    public void BattleSetting()
+    public void BattleStartSetting()
     {
-        //BattleReset();
-        LoadBattleInfo();
-
-
+        battleFieldSetter.BattleSetting();
 
     }
-
-    private void BattleReset()
-    {
-        _battleContainer.round = 0;
-        _battleContainer.heroList.Clear();
-
-    }
-
-    private void LoadBattleInfo()
-    {
-#warning [배틀] 배틀 정보 불러오는 기능 추가 필요
-    }
-
 
 }

@@ -2,6 +2,7 @@ using FieldDefinition;
 using DataDefinition;
 using System.Collections.Generic;
 using SystemDefinition;
+using CharacterDefinition;
 using UnityEngine;
 
 public class DataManager : IManageSetterFunc
@@ -9,12 +10,17 @@ public class DataManager : IManageSetterFunc
     private Dictionary<Vector2Int, FieldData> fieldData;
     private Vector2Int playerPosition;
 
+    private CharacterDataContainer<CharacterTable> characterDataContainer;
+
     public IGridFunc gridManager;
 
     void Awake()
     {
         fieldData = new Dictionary<Vector2Int, FieldData>();
         playerPosition = new Vector2Int();
+
+        characterDataContainer = new CharacterDataContainer<CharacterTable>();
+
     }
     
     //그리드매니저 받아오기

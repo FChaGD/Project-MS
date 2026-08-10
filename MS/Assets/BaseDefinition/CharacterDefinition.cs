@@ -21,11 +21,28 @@ namespace CharacterDefinition
 
 
     }
-    #region 캐릭터 스크립트 테이블 정의
+    }
+    
+    public class CharacterDataContainer<T> : BaseDataContainer<T> where T : CharacterScriptableObject, IIdentifiable
+    {
+
+    }
+
+    #region 캐릭터 스크립터블 테이블 정의
 
     public abstract class CharacterScriptableObject : CustomBaseScriptableObject
     {
     }
+    #region 종합 캐릭터 테이블 정의
+
+    [CreateAssetMenu(fileName = "CharacterTable", menuName = "Scriptable Objects/Character/CharacterTable")]
+    public class CharacterTable : CharacterScriptableObject
+    {
+        public CharacterData characterData; //캐릭터 데이터
+        public CharacterStringData characterStringData; //캐릭터 String 데이터
+    }
+
+    #endregion
 
     #region 캐릭터 데이터 스크립터블 테이블 정의
 
@@ -57,6 +74,7 @@ namespace CharacterDefinition
         public SocialSystem baseSystem; //기본 사회사상
         public DependencyStyle politicTendency; //정치 편향성
     }
+
     [CreateAssetMenu(fileName = "CharacterDataTable", menuName = "Scriptable Objects/Character/CharacterDataTable")]
     public class CharacterDataTable : CharacterScriptableObject
     {
@@ -100,8 +118,8 @@ namespace CharacterDefinition
 
     public abstract class CharacterBase
     {
-        protected CharacterDataTable characterDataTable; //캐릭터 데이터 테이블
-        protected CharacterStringTable characterStringTable; //캐릭터 String 테이블
+        public CharacterDataTable characterDataTable; //캐릭터 데이터 테이블
+        public CharacterStringTable characterStringTable; //캐릭터 String 테이블
 
         public int id; //캐릭터 고유 아이디
         public float curhp; //체력
@@ -114,6 +132,9 @@ namespace CharacterDefinition
         public float relationship; //친밀도
 
 
+        /// <summary>
+        /// 0: 배치 없음, 1~9:배치
+        /// </summary>
         public int battlePosition; //전투 위치
         public float curSanity; //정신력
         public float curEnergy; //활력
@@ -125,10 +146,6 @@ namespace CharacterDefinition
     public class PlayableCharacter : CharacterBase
     {
         protected PlayableDataTable playableTable; //플레이어블 캐릭터 데이터 테이블
-        /// <summary>
-        /// 0: 배치 없음, 1~9:배치
-        /// </summary>
-        public int position;
 
         public PlayableCharacter(int id)
         {
@@ -142,6 +159,20 @@ namespace CharacterDefinition
 
         }
 
+    }
+
+    [Serializable]
+    public class EnemyCharacter : CharacterBase
+    {
+
+        public EnemyCharacter(int id)
+        {
+            this.id = id;
+            Init();
+        }
+        private void Init()
+        {
+        }
     }
 
 }

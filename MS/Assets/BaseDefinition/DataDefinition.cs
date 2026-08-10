@@ -26,7 +26,7 @@ namespace DataDefinition
 
         public static List<T> dataList;
 
-        private static Dictionary<int, T> _cache;
+        protected static Dictionary<int, T> _cache;
 
         public T data;
 

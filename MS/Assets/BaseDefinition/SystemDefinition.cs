@@ -81,12 +81,10 @@ namespace SystemDefinition
     public abstract class BaseGameMode
     {
         protected ICameraFunc cameraController;
-        protected IBattleFunc battleController;
 
-        public BaseGameMode(ICameraFunc camera, IBattleFunc battle)
+        public BaseGameMode(ICameraFunc camera)
         {
             cameraController = camera;
-            battleController = battle;
         }
 
         public abstract void SetUp();
@@ -97,7 +95,7 @@ namespace SystemDefinition
     //다른 시스템 위에 올라갈 수 없는 변경해야하는 기준점
     public abstract class FloorMode : BaseGameMode
     {
-        public FloorMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public FloorMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -106,7 +104,7 @@ namespace SystemDefinition
     //다른 시스템위에 올라갈 수 있는 게임 모드
     public abstract class CoverableMode : BaseGameMode
     {
-        public CoverableMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public CoverableMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -115,7 +113,7 @@ namespace SystemDefinition
     //변경 시 바로 바뀌는 게임 모드
     public abstract class ChangableMode : CoverableMode
     {
-        public ChangableMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public ChangableMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -124,7 +122,7 @@ namespace SystemDefinition
     //더이상 게임 모드가 올라갈 수 없는 마무리 게임 모드
     public abstract class EndPointMode : CoverableMode
     {
-        public EndPointMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public EndPointMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -137,7 +135,7 @@ namespace SystemDefinition
     //월드 모드
     public class WorldMode : FloorMode
     {
-        public WorldMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public WorldMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -156,7 +154,7 @@ namespace SystemDefinition
     //마을, 거점 등 인물 상태
     public class CivilMode : FloorMode
     {
-        public CivilMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public CivilMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -178,7 +176,7 @@ namespace SystemDefinition
     //전투 모드
     public class BattleMode : ChangableMode
     {
-        public BattleMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public BattleMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -197,7 +195,7 @@ namespace SystemDefinition
     //화면 가득 채운 UI 상태
     public class SystemMode : ChangableMode
     {
-        public SystemMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public SystemMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -215,7 +213,7 @@ namespace SystemDefinition
     //대화창 상태
     public class DialogMode : ChangableMode
     {
-        public DialogMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public DialogMode(ICameraFunc camera) : base(camera)
         {
 
         }
@@ -235,7 +233,7 @@ namespace SystemDefinition
     //게임 일시 정지
     public class PauseMode : EndPointMode
     {
-        public PauseMode(ICameraFunc camera, IBattleFunc battle) : base(camera, battle)
+        public PauseMode(ICameraFunc camera) : base(camera)
         {
 
         }
